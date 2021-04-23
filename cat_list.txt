@@ -1,0 +1,8 @@
+Bag
+Bottle
+Can
+Container
+Cup
+Other
+Straw
+Wrapper
