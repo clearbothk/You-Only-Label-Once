@@ -1,3 +1,5 @@
-Bag
 Bottle
 Can
+Cup
+Box Drink
+Styrofoam
