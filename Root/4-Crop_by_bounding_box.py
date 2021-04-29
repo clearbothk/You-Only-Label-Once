@@ -1,23 +1,10 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[344]:
-
-
 import glob
 from tqdm import tqdm
 import shutil
 from PIL import Image
 
-
-# In[345]:
-
-
 txt_dir = glob.glob("./just_bottles/*.txt")
 class_target = ["4"]
-
-
-# In[348]:
 
 
 txt_with_class_target = []
@@ -31,25 +18,12 @@ for txt in tqdm(txt_dir):
             break
 
 
-# In[349]:
-
-
 list_of_images = []
 for i in range(len(txt_with_class_target)):
     test_image = txt_with_class_target[i].split("\\")[1][:-4]
     list_of_images.append(test_image)
 
 
-# In[350]:
-
-
-list_of_images[:3]
-
-
-# In[356]:
-
-
-#read_txt
 for filename in list_of_images:
     #Grab Bounding Boxes in Each Txt file
     bounding_boxes = []
@@ -59,9 +33,7 @@ for filename in list_of_images:
             if line[0] == "4":
                 convert_to_float = [float(i) for i in line]
                 bounding_boxes.append(convert_to_float)
-#     with Image.open(f"./Alex_data/images/{i}.jpg") as im:
-#         dw,dh = im.size
-#         image = im
+
     img = Image.open(f"./just_bottles/{filename}.jpg")
     for i in bounding_boxes:
         _, x, y, w, h = i
@@ -72,10 +44,4 @@ for filename in list_of_images:
         bottom = int((y + h / 2) * dh)
         im_cropped = img.crop((left, top, right, bottom))
         im_cropped.save(f"./test_delete/{filename}.jpg")
-
-
-# In[ ]:
-
-
-
 
