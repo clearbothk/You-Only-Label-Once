@@ -17,8 +17,16 @@ date = str(date.today())
 time = datetime.now().strftime("%H_%M")
 
 SOURCE = load_folder('Load Data Source')
+print(SOURCE)
 WEIGHTS = original_path + '/best.pt'
-PROJECT = load_folder('Load Project Folder') + '/' + date + '/'
+PROJECT = load_folder('Load Project Folder')
+print(PROJECT)
+
+while SOURCE == PROJECT:
+    print('Source folder cannot be the same as destination folder!')
+    PROJECT = load_folder('Load Project Folder')
+
+PROJECT = PROJECT + '/' + date + '/'
 NAME = 'predictions_' + time
 
 try:
@@ -68,13 +76,17 @@ with open(original_path + '/item_classes.json') as f:
     item_class_dict = json.load(f)
 
 os.chdir('..')
-os.chdir(os.getcwd() + '\\' + NAME + '\Correct')
+os.chdir(os.getcwd() + '/' + NAME + '/Correct')
 os.mkdir('cropped')
 
 path = os.getcwd()
+
 labels_path = glob.glob(path + '/labels/*.txt')
 image_path = glob.glob(path + '/images/*.jpg')
-files = [i.split('\\')[-1][:-4] for i in labels_path]
+#files = [i.split('/')[-1][:-4] for i in labels_path]
+files = [i[-25:-4] for i in labels_path]
+
+#print(files) 
 
 for cat in item_class_dict.values():
     os.mkdir('./cropped/' + cat)

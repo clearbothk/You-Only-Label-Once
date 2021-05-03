@@ -5,7 +5,10 @@ def crop_images(files, path, class_dict):
     for file in files:
         counter = 1
         label_path = path + '/labels/' + file + '.txt'
-        im = Image.open(path + '/images/' + file + '.jpg')
+        try:
+            im = Image.open(path + '/images/' + file + '.jpg')
+        except:
+            im = Image.open(path + '\images\\' + file + '.jpg')
         im = im.convert('RGB')
         im_w, im_h = im.size
 
