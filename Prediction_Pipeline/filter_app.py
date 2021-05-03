@@ -42,9 +42,13 @@ def open_directory():
     global list_dir
     global root_path
     global dir_dict
-    root_dir = filedialog.askdirectory()
+    global prediction_folder
+    root_dir = filedialog.askdirectory(title='Please Select Cropped Objects Folder')
     os.chdir(root_dir)
     root_path = os.getcwd()
+    os.chdir('..')
+    os.chdir('..')
+    prediction_folder = os.getcwd()
     list_dir = [i for i in os.listdir(root_dir) if i.lower() in object_list]
     dir_dict = {}
 
@@ -66,7 +70,6 @@ def open_directory():
 def change_folder(event):
     global object_menu
     global list_dir
-    print(object_menu.get())
     open_file_multi(dir_dict[object_menu.get()])
     
 # object_menu = StringVar()
@@ -95,7 +98,6 @@ def open_file_multi(dir_path):
 
     # display what object class the folder belongs to and to control whether materials can be selected
     for i in object_list:
-        print(i.lower(), folder_path.lower())
         if i.lower() in folder_path.lower():
             object_class = i
             instructions['text'] = f'Please select the what material the {object_class} is made of'
@@ -288,6 +290,7 @@ def wipe_dict():
         'Paper' : [],
         'Unknown' : []
     }
+    fileclass_text['text'] = 'Not Yet Classified'
     save_dict()
     count_class()
     print('material_dict has been returned to clean slate')
@@ -315,14 +318,14 @@ def load_dict():
 # after classifying images create individual materials folder and files from dictionary to folder
 def copy_files():
     for i in material_dict:
-        if i in os.listdir(folder):
-            shutil.rmtree(f'{folder_path}/{object_class}_{i}')
+        if f'{object_class}_{i}' in os.listdir(prediction_folder):
+            shutil.rmtree(f'{prediction_folder}/{object_class}_{i}')
             print(f"{i}'s original directory has be deleted")
         if len(material_dict[i]) != 0:
-            os.makedirs((f'{folder_path}/{object_class}_{i}'),exist_ok=True)
+            os.makedirs((f'{prediction_folder}/{object_class}_{i}'),exist_ok=True)
             print(f"{i}'s has been created")
             for file in material_dict[i]:
-                shutil.copy(file,f'{folder_path}/{object_class}_{i}')
+                shutil.copy(file,f'{prediction_folder}/{object_class}_{i}')
 
 # test command (testing)
 
@@ -527,8 +530,8 @@ root.mainloop()
 # Version 1.0 02/05/2021
  # - finished first complete interation
 
-# Version 1.1 02/05/2021
- # - added more function buttons for backup
- # - want to add function to extract multiple files at once and change directories to different objects so that when one object class material classification is complete the next folder can be selected without moving screens(plus use of hotkeys)
+# Version 1.1-2 02/05/2021
+ # - (done) added more function buttons for backup
+ # - (done) want to add function to extract multiple files at once and change directories to different objects so that when one object class material classification is complete the next folder can be selected without moving screens(plus use of hotkeys)
  # - find images that have not been classified quickly
  # - 
