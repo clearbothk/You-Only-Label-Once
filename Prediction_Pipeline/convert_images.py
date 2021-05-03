@@ -19,3 +19,19 @@ def convert(source, date):
         im.save(f"{source}/{date}_image_{counter:04}.jpg")
         os.remove(source + pic)
         counter += 1
+
+def rename(source, date):
+    print("----------")
+    print("Renaming all source images for processing")
+    print("----------")
+
+    counter = 1
+
+    for pic in tqdm(os.listdir(source)):
+           
+        im = Image.open(source + pic)
+        im = ImageOps.exif_transpose(im)
+        im = im.convert('RGB')
+        im.save(f"{source}/{date}_image_{counter:04}.jpg")
+        os.remove(source + pic)
+        counter += 1

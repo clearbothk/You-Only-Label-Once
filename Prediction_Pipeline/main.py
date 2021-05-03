@@ -1,21 +1,24 @@
 import shutil
 import os
-from subprocess import check_call
-import sys
+import glob
+import json
+from PIL import Image
 from datetime import date, datetime
 from yolo_check import clone_yolo
-from convert_images import convert
-
+from convert_images import convert, rename
+from load_source import load_folder
+from crop_images import crop_images
 
 # Clone Repository if yolov5 not already in the root folder
 clone_yolo()
 
+original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
 
-SOURCE = 'C:/Users/raeky/Documents/python_work/group_project_clearbot/test/SOURCE'
-WEIGHTS = 'C:/Users/raeky/Documents/python_work/group_project_clearbot/prediction_pipeline/best.pt'
-PROJECT = 'C:/Users/raeky/Documents/python_work/group_project_clearbot/test/' + date + '/'
+SOURCE = load_folder('Load Data Source')
+WEIGHTS = original_path + '/best.pt'
+PROJECT = load_folder('Load Project Folder') + '/' + date + '/'
 NAME = 'predictions_' + time
 
 try:
@@ -26,16 +29,16 @@ except:
 # Copy source images into date folder
 if 'images' not in os.listdir(PROJECT):
     print('Copying images...\n')
-    shutil.copytree(SOURCE, PROJECT + 'images')
-    copied_source = PROJECT + 'images/'
-    convert(copied_source, date)
 else:
     if os.path.exists(PROJECT + 'images'):
         shutil.rmtree(PROJECT + 'images')
-    shutil.copytree(SOURCE, PROJECT + 'images')
-    copied_source = PROJECT + 'images/'
-    convert(copied_source, date)
-#     copied_source = PROJECT + 'images/'
+        shutil.rmtree(PROJECT + 'fullsize_images')
+
+shutil.copytree(SOURCE, PROJECT + 'fullsize_images')
+shutil.copytree(SOURCE, PROJECT + 'images')
+copied_source = PROJECT + 'images/'
+rename(PROJECT + 'fullsize_images/', date)
+convert(copied_source, date)
 
 source_count = len(os.listdir(SOURCE))
 print(f'Source location is: {SOURCE}')
@@ -43,50 +46,38 @@ print(f'{source_count} images found in source folder.\n')
 
 """PREDICT"""
 os.chdir('yolov5')
-os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt')
+os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5')
 
 os.chdir(PROJECT + NAME)
 
 # Copy bounded predictions to 'BOUNDED_IMAGES'
-os.mkdir('bounded_images')
+try:
+    os.mkdir('bounded_images')
+except:
+    pass
 for file in os.listdir():
     if file[-4:] == '.jpg':
         shutil.move(file, 'bounded_images')
 
 
 """TKINTER"""
+import correct_check
 
+"""CROP IMAGES"""
+with open(original_path + '/item_classes.json') as f:
+    item_class_dict = json.load(f)
 
+os.chdir('..')
+os.chdir(os.getcwd() + '\\' + NAME + '\Correct')
+os.mkdir('cropped')
 
-# # Install packages
-# def install(package):
-#     check_call([sys.executable, "-m", "pip", "install", package])
+path = os.getcwd()
+labels_path = glob.glob(path + '/labels/*.txt')
+image_path = glob.glob(path + '/images/*.jpg')
+files = [i.split('\\')[-1][:-4] for i in labels_path]
 
-# # install('pygithub')
+for cat in item_class_dict.values():
+    os.mkdir('./cropped/' + cat)
 
+crop_images(files, path, item_class_dict)
 
-
-# # Model
-# model = torch.hub.load('ultralytics/yolov5', 'custom', path_or_model='apr28pm50.pt')
-# #model.load_state_dict(torch.load('apr28pm50.pt')['model'].state_dict())
-
-# #model.classes = ['bottle', 'can', 'cup', 'box drink', 'face mask', 'plastic bag']
-
-# import detect
-
-
-
-# # Image
-# img = 'C:/Users/raeky/Documents/python_work/group_project_clearbot/labelled_data/images/styro_62.jpg'
-
-
-# detect.detect(img)
-
-# img = Image.open(img)
-# #print(img.size)
-# #img.show()
-
-# # Inference
-# results = model(img)
-# results.print()
-#results.show()  # or .show(), .save()
