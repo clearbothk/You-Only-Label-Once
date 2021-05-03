@@ -1,0 +1,6 @@
+bottle glass
+can
+cup plastic
+box drink
+bottle plastic
+cup paper

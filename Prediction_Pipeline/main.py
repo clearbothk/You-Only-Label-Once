@@ -93,4 +93,7 @@ for cat in item_class_dict.values():
 
 crop_images(files, path, item_class_dict)
 
+
 import filter_app
+
+
