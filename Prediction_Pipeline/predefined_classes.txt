@@ -1,0 +1,6 @@
+bottle
+can
+cup
+box drink
+face mask
+plastic bag
