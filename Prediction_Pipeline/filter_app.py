@@ -383,7 +383,7 @@ def quitquit(event):
 
 # start
 root = tk.Tk()
-root.title('Object Material Filter V1.2')
+root.title('Object Material Filter V2.0')
 # KeyBinding Controls
 
 root.bind("<Key>", handle_keypress)
