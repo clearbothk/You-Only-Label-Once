@@ -10,6 +10,7 @@ from load_source import load_folder
 from crop_images import crop_images
 
 # Clone Repository if yolov5 not already in the root folder
+"""CHECK YOLO"""
 clone_yolo()
 
 original_path = os.getcwd()
@@ -17,15 +18,13 @@ date = str(date.today())
 time = datetime.now().strftime("%H_%M")
 
 SOURCE = load_folder('Load Data Source')
-print(SOURCE)
 WEIGHTS = original_path + '/best.pt'
 PROJECT = load_folder('Load Project Folder')
-print(PROJECT)
 
 while SOURCE == PROJECT:
     print('Source folder cannot be the same as destination folder!')
     PROJECT = load_folder('Load Project Folder')
-
+ 
 PROJECT = PROJECT + '/' + date + '/'
 NAME = 'predictions_' + time
 
@@ -67,7 +66,6 @@ for file in os.listdir():
     if file[-4:] == '.jpg':
         shutil.move(file, 'bounded_images')
 
-
 """TKINTER"""
 import correct_check
 
@@ -86,10 +84,11 @@ image_path = glob.glob(path + '/images/*.jpg')
 #files = [i.split('/')[-1][:-4] for i in labels_path]
 files = [i[-25:-4] for i in labels_path]
 
-#print(files) 
-
 for cat in item_class_dict.values():
     os.mkdir('./cropped/' + cat)
 
 crop_images(files, path, item_class_dict)
+
+import filter_app
+
 
