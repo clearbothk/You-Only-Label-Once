@@ -8,6 +8,7 @@ from yolo_check import clone_yolo
 from convert_images import convert, rename
 from load_source import load_folder
 from crop_images import crop_images
+import subprocess
 
 # Clone Repository if yolov5 not already in the root folder
 """CHECK YOLO"""
@@ -53,7 +54,17 @@ print(f'{source_count} images found in source folder.\n')
 
 """PREDICT"""
 os.chdir('yolov5')
-os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5')
+#os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5')
+
+subprocess = subprocess.Popen(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5', shell=True, stdout=subprocess.PIPE)
+#subprocess_return = subprocess.stdout.read()
+#print(subprocess_return)
+
+while True:
+  line = subprocess.stdout.readline()
+  print(line.decode('utf-8').strip())
+  if not line:
+    break
 
 os.chdir(PROJECT + NAME)
 
