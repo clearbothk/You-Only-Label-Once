@@ -20,6 +20,7 @@ material_dict = {
     'Unknown' : []
 }
 
+# dict for recording classified object materials for stat tracking
 stats_dict = {}
 
 object_material = {
@@ -38,46 +39,85 @@ object_class = '_______'
 
 # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
-# read folders from directory
+# Read all folders in the selected Directory
 def open_directory():
-    global root_dir
-    global list_dir
-    global root_path
-    global dir_dict
-    global prediction_folder
-    root_dir = filedialog.askdirectory(title='Please Select Cropped Objects Folder')
-    os.chdir(root_dir)
-    root_path = os.getcwd()
-    os.chdir('..')
-    os.chdir('..')
-    prediction_folder = os.getcwd()
-    list_dir = [i for i in os.listdir(root_dir) if i.lower() in object_list]
-    dir_dict = {}
+    try:
+        global root_dir
+        global list_dir
+        global root_path
+        global dir_dict
+        global prediction_folder
+        global dir_index
+        root_dir = filedialog.askdirectory(title='Please Select Cropped Objects Folder')
+        os.chdir(root_dir)
+        root_path = os.getcwd()
+        os.chdir('..')
+        os.chdir('..')
+        prediction_folder = os.getcwd()
+        list_dir = [i for i in os.listdir(root_dir) if i.lower() in object_list]
+        dir_dict = {}
 
-    # create dictionary for object directory paths
-    for i in list_dir:
-        dir_dict[i] = f'{root_path}/{i}'
+        # create dictionary for object directory paths
+        for i in list_dir:
+            dir_dict[i] = f'{root_path}/{i}'
 
-    # Reset object_menu and delete all old options
-    object_menu.set('')
-    w['menu'].delete(0, 'end')
+        # Reset object_menu and delete all old options
+        object_menu.set('')
+        w['menu'].delete(0, 'end')
 
-    # Insert list of new options (tk._setit hooks them up to var)
-    for i in list_dir:
-        w['menu'].add_command(label=i, command=tk._setit(object_menu, i, change_folder))
-    
-    object_menu.set(list_dir[0])
-    open_file_multi(dir_dict[object_menu.get()])
+        # Insert list of new options (tk._setit hooks them up to var)
+        for i in list_dir:
+            # display the amount of images in a folder and add object_class to OptionMenu
+            num_img = len([ i for i in os.listdir(dir_dict[i]) if '.jpg' in i])
+            w['menu'].add_command(label=f'{i} ({num_img})', command=tk._setit(object_menu, f'{i} ({num_img})', change_folder))
+        
+        # setting the first num_img need it's own variable 
+        dir_index = 0
+        num_img_init = len([ i for i in os.listdir(dir_dict[list_dir[dir_index]]) if '.jpg' in i])
+        object_menu.set(f'{list_dir[0]} ({num_img_init})')
+        open_file_multi(dir_dict[list_dir[dir_index]])
+        print(list_dir[dir_index])
+    except FileNotFoundError:
+        print('Directory Not Selected (Open Folder)')
 
 def change_folder(event):
     global object_menu
     global list_dir
-    open_file_multi(dir_dict[object_menu.get()])
-    
-# object_menu = StringVar()
-# object_menu.set('empty') # default value
-# w = OptionMenu(root, object_menu, *list_dir, command=test)
-# w.grid(column=0,row=0)
+    global dir_dict
+    global dir_index
+    # need to split() the object_menu.get() get just the object name without the num_img
+    temp_object = object_menu.get().split()[0]
+    dir_index = list_dir.index(temp_object)
+    print(temp_object)
+    open_file_multi(dir_dict[list_dir[dir_index]])
+
+def up_menu():
+    try:
+        global dir_index
+        if dir_index >= 1:
+            dir_index -= 1
+            num_img_init = len([ i for i in os.listdir(dir_dict[list_dir[dir_index]]) if '.jpg' in i])
+            object_menu.set(f'{list_dir[dir_index]} ({num_img_init})')
+            print(list_dir[dir_index])
+            open_file_multi(dir_dict[list_dir[dir_index]])
+        else:
+            print('Top of Options Menu')
+    except NameError:
+        pass
+
+def down_menu():
+    try:
+        global dir_index
+        if dir_index < (len(list_dir))-1:
+            dir_index += 1
+            num_img_init = len([ i for i in os.listdir(dir_dict[list_dir[dir_index]]) if '.jpg' in i])
+            object_menu.set(f'{list_dir[dir_index]} ({num_img_init})')
+            print(list_dir[dir_index])            
+            open_file_multi(dir_dict[list_dir[dir_index]])
+        else:
+            print('Bottom of Options Menu')
+    except NameError:
+        pass
 
 def open_file_multi(dir_path):
     #using global to create a global variable
@@ -88,6 +128,8 @@ def open_file_multi(dir_path):
     global folder
     global object_class
     global material_dict
+    global object_class
+    global image_label
 
     # clicking button allows user to select specific directory
     folder = dir_path
@@ -121,7 +163,7 @@ def open_file_multi(dir_path):
     'Glass' : [],
     'Paper' : [],
     'Unknown' : []
-}
+    }
     # load material_dict if in folder (continue to work if work has already been done) else create material_dict.json 
     if f'{object_class}_material_dict.json' in os.listdir(folder):
         load_dict()
@@ -132,65 +174,26 @@ def open_file_multi(dir_path):
 
     # load first image filename_text and fileclass_text
     current_image = 0
-    load_image()
-    save_dict()
-    count_class()
-
-def open_file():
-    #using global to create a global variable
-    global list_images
-    global image_dict
-    global folder_path
-    global current_image
-    global folder
-    global object_class
-
-    # clicking button allows user to select specific directory
-    folder = filedialog.askdirectory()
-
-    # create list of image filenames 
-    list_images = sorted(os.listdir(folder)) 
-    list_images = [i for i in list_images if '.jpg' in i] # names of images into a list
-    os.chdir(folder)
-    folder_path = os.getcwd()
-    print(folder_path)
-
-    # display what object class the folder belongs to and to control whether materials can be selected
-    for i in object_list:
-        if i.lower() in folder_path.lower():
-            object_class = i
-            instructions['text'] = f'Please select the what material the {object_class} is made of'
-        else:
-            object_class = 'Unknown Object'
-            instructions['text'] = f'Please select the what material the {object_class} is made of'
-    
-    # image filename dictionary for counting reference
-    image_dict = {}
-    for i in range(len(list_images)):
-        image_dict[i] = list_images[i]
-    print(f'{len(list_images)} image(s) in this folder')
-
-    # load material_dict if in folder (continue to work if work has already been done) else create material_dict.json 
-    if f'{object_class}_material_dict.json' in os.listdir(folder):
-        load_dict()
-        print(f'material dictionary found, {object_class}_material_dict.json loaded')
-    else:
-        save_dict()
-        print(f'material dictionary not found, {object_class}_material_dict.json created and saved')
-
-    # load first image filename_text and fileclass_text
-    current_image = 0
-    load_image()
-    save_dict()
-    count_class()
+    try:
+        load_image()
+        print('There are images in the folder')
+        count_class()
+    except KeyError:
+        image_label.config(image='')
+        filename_text['text'] = 'File Name'
+        fileclass_text['text'] = 'Material'
+        number_img['text'] = 'None'
+        classified['text'] = 'None'
+        print(f'No images in {object_class}')
 
 def load_image():
     # load image included in open_file function`
     global image
     global current_image 
     global image_path
+    global image_label
     image_path = folder_path + '/' + image_dict[current_image]
-    MAX_SIZE = (400, 400)
+    MAX_SIZE = (300, 300)
     image = Image.open(image_path)
     image.thumbnail(MAX_SIZE)
     image = ImageTk.PhotoImage(image)
@@ -198,7 +201,7 @@ def load_image():
     image_label.image = Image
     image_label.grid(column=0, columnspan=5, row=1, rowspan=3)
 
-    number['text'] = f'{int(current_image+1)} / {len(list_images)}'
+    number_img['text'] = f'{int(current_image+1)} / {len(list_images)}'
 
     #change filename_text
     filename_text['text'] = image_dict[current_image]
@@ -213,67 +216,82 @@ def load_image():
     count_class()
 
 def next_image():
-    # going to next image
-    global image
-    global current_image
-    global image_path
-    if current_image < (len(list_images)-1):
-        current_image += 1
-        load_image()
-    save_dict()
+    try:
+        # going to next image
+        global image
+        global current_image
+        global image_path
+        if current_image < (len(list_images)-1):
+            current_image += 1
+            load_image()
+        else:
+            print('Last Image')
+        save_dict()
+    except NameError:
+        pass
 
 def prev_image():
-    # going to previous image
-    global image
-    global current_image
-    global image_path
-    if current_image >= 1:
-        current_image -= 1
-        load_image()
-    save_dict()
+    try:
+        # going to previous image
+        global image
+        global current_image
+        global image_path
+        if current_image >= 1:
+            current_image -= 1
+            load_image()
+        else:
+            print('First Image')
+        save_dict()
+    except NameError:
+        pass
 
 def select_material(material):
-    global material_dict
-    # gate
-    in_dict = False
-    # check if image_path already in the dictionary
-    for i in material_dict:
-        if image_path in material_dict[i]:
-            print(f'object already classified as {i}')
-            in_dict = True
-            return
-    if in_dict == False:
-        if image_path not in material_dict[material]:
-            material_dict[material].append(image_path)
-            print(f'object classified as {material}')
-            save_dict()
-            count_class()
-    for i in material_dict:
-        if image_path in material_dict[i]:
-            fileclass_text['text'] = i
-            save_dict()
-            count_class()
-            next_image()
-            return
-        else:
-            fileclass_text['text'] = 'Not Yet Classified'
-    save_dict()
-    count_class()
-    next_image()
-    
+    try:
+        global material_dict
+        # gate
+        in_dict = False
+        # check if image_path already in the dictionary
+        for i in material_dict:
+            if image_path in material_dict[i]:
+                print(f'object already classified as {i}')
+                in_dict = True
+                return
+        if in_dict == False:
+            if image_path not in material_dict[material]:
+                material_dict[material].append(image_path)
+                print(f'object classified as {material}')
+                save_dict()
+                count_class()
+        for i in material_dict:
+            if image_path in material_dict[i]:
+                fileclass_text['text'] = i
+                save_dict()
+                count_class()
+                next_image()
+                return
+            else:
+                fileclass_text['text'] = 'Not Yet Classified'
+        save_dict()
+        count_class()
+        next_image()
+    except NameError:
+        pass
 
 def delete_material_class():
-    for i in material_dict:
-        if image_path in material_dict[i]:
-            material_dict[i].remove(image_path)
-            print('object class has been reset')
-            fileclass_text['text'] = 'Not Yet Classified'
-            save_dict()
-            count_class()
-            return
-    print('object not classified')     
-    save_dict()
-    count_class()
+    try:
+        for i in material_dict:
+            if image_path in material_dict[i]:
+                material_dict[i].remove(image_path)
+                print('object class has been reset')
+                fileclass_text['text'] = 'Not Yet Classified'
+                save_dict()
+                count_class()
+                return
+        print('object not classified')     
+        save_dict()
+        count_class()
+    except NameError:
+        pass
 
 # have a look at material_dict
 def display_dict():
@@ -308,44 +326,40 @@ def count_class():
 # save dictionary
 def save_dict():
     global material_dict
-    with open((folder_path + '/' + object_class + '_' + 'material_dict' + '.json') , 'w') as f:
+    with open(f'{folder_path}/{object_class}_material_dict.json' , 'w') as f:
         json.dump(material_dict,f)
 
 # load dictionary
 def load_dict():
     global material_dict
-    with open((folder_path + '/' + object_class + '_' + 'material_dict' + '.json') , 'r') as f:
+    with open(f'{folder_path}/{object_class}_material_dict.json' , 'r') as f:
         material_dict = json.load(f)
 
 # after classifying images create individual materials folder and files from dictionary to folder
 def copy_files():
-    global stats_dict
-    global material_dict
-    # create folder to hold all classified object materials
-    os.makedirs((f'{prediction_folder}/Object Materials'), exist_ok=True)
+    try:
+        global stats_dict
+        global material_dict
+        # create folder to hold all classified object materials
+        os.makedirs((f'{prediction_folder}/Object Materials'), exist_ok=True)
 
-    stats_dict[object_class] = material_dict
+        stats_dict[object_class] = material_dict
+        
+        # create and update stats dict
+        with open(f'{prediction_folder}/Object Materials/stats.json', 'w') as f:
+            json.dump(stats_dict,f)
 
-    # create and update stats dict
-    with open(f'{prediction_folder}/Object Materials/stats.json', 'w') as f:
-        json.dump(stats_dict,f)
-
-    for i in material_dict:
-        if f'{object_class}_{i}' in os.listdir(f'{prediction_folder}/Object Materials'):
-            shutil.rmtree(f'{prediction_folder}/Object Materials/{object_class}_{i}')
-            print(f"{i}'s original directory has be deleted")
-        if len(material_dict[i]) != 0:
-            os.makedirs(f'{prediction_folder}/Object Materials/{object_class}_{i}',exist_ok=True)
-            print(f"{i}'s has been created")
-            for file in material_dict[i]:
-                shutil.copy(file,f'{prediction_folder}/Object Materials/{object_class}_{i}')
-
-# test command (testing)
-
-def test(event):
-    print('works')
-    print(object_menu.get())
-
+        for i in material_dict:
+            if f'{object_class}_{i}' in os.listdir(f'{prediction_folder}/Object Materials'):
+                shutil.rmtree(f'{prediction_folder}/Object Materials/{object_class}_{i}')
+                print(f"{i}'s original directory has be deleted")
+            if len(material_dict[i]) != 0:
+                os.makedirs(f'{prediction_folder}/Object Materials/{object_class}_{i}',exist_ok=True)
+                print(f"{i}'s has been created")
+                for file in material_dict[i]:
+                    shutil.copy(file,f'{prediction_folder}/Object Materials/{object_class}_{i}')
+    except NameError:
+        print('Directory Not Selected (Copy Files)')
 
 # Keybind Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -353,52 +367,94 @@ def handle_keypress(event):
     # handling keypresses for material selection
     if event.char == "1":
         print("1 pressed")
-        select_material('Plastic')
+        try:
+            select_material('Plastic')
+        except NameError:
+            pass
     elif event.char == "2":
         print("2 pressed")
-        select_material('Metal')
+        try:
+            select_material('Metal')
+        except NameError:
+            pass
     elif event.char == "3":
-        print("3 pressed")    
-        select_material('Styrofoam')
+        print("3 pressed")   
+        try: 
+            select_material('Styrofoam')
+        except NameError:
+            pass
     elif event.char == "4":
         print("4 pressed")    
-        select_material('Glass')
+        try:
+            select_material('Glass')
+        except NameError:
+            pass
     elif event.char == "5":
         print("5 pressed")    
-        select_material('Paper')
+        try:
+            select_material('Paper')
+        except NameError:
+            pass
     elif event.char == "6":
         print("6 pressed")    
-        select_material('Unknown')
+        try:
+            select_material('Unknown')
+        except NameError:
+            pass
     elif event.char == "o":
         print("o pressed")    
-        open_file()
+        open_directory()
+    elif event.char == "c":
+        print("c pressed")    
+        copy_files()
 
 def left(event):
     print("< pressed")    
-    prev_image()
+    try:
+        prev_image()
+    except NameError:
+        pass
 
 def right(event):
     print("> pressed")    
-    next_image()
+    try:
+        next_image()
+    except NameError:
+        pass
+
+def up(event):
+    print('/\ pressed')
+    up_menu()
+
+def down(event):
+    print('\/ pressed')
+    down_menu()
 
 def deldel(event):
     print('del pressed')
-    delete_material_class()
+    try:
+        delete_material_class()
+    except NameError:
+        pass
 
 def deldelclean(event):
     print('shift del/bksp pressed')
-    wipe_dict()
+    try:
+        wipe_dict()
+    except NameError:
+        pass
 
 def quitquit(event):
     root.destroy()
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
-# start
+# Starts
 root = tk.Tk()
-root.title('Object Material Filter V2.0')
-# KeyBinding Controls
+root.geometry('700x650')
+root.title('Object Material Filter V2.2')
 
+# KeyBinding Controls
 root.bind("<Key>", handle_keypress)
 root.bind("<Left>", left)
 root.bind('<Right>', right)
@@ -407,23 +463,22 @@ root.bind('<BackSpace>', deldel)
 root.bind('<Shift-BackSpace>', deldelclean)
 root.bind('<Delete>', deldel)
 root.bind('<Shift-Delete>', deldelclean)
+root.bind('<Up>', up)
+root.bind('<Down>', down)
 
 # Testing Object Menu
 object_menu = StringVar()
-object_menu.set('') # default value
-w = OptionMenu(root, object_menu, *list_dir, command=test)
-w.grid(column=0,row=0)
+object_menu.set('None') # default value
+w = OptionMenu(root, object_menu, None)
+w.grid(column=5, row=0)
 
 # Setting Canvas
 canvas = tk.Canvas(root, width=700, height=700)
 canvas.grid(columnspan=8, rowspan=7)
 
-# instructions
+# Instructions
 instructions = tk.Label(root, text=f'Please select the what material the {object_class} is made of')
-instructions.grid(columnspan=4, column=1, row=0)
-
-number = tk.Label(root, text='Number of Images')
-number.grid(columnspan=1, column=3, row=4)
+instructions.grid(columnspan=5, column=0, row=0)
 
 filename_title = tk.Label(root, text='File Name:')
 filename_title.grid(columnspan=1, column=0, row=4)
@@ -431,13 +486,16 @@ filename_title.grid(columnspan=1, column=0, row=4)
 filename_text = tk.Label(root, text='File Name')
 filename_text.grid(columnspan=2, column=1, row=4)
 
-fileclass_title = tk.Label(root, text='Object Class:')
+fileclass_title = tk.Label(root, text='Object Material:')
 fileclass_title.grid(columnspan=1, column=0, row=5)
 
-fileclass_text = tk.Label(root, text='Object Class')
+fileclass_text = tk.Label(root, text='Material')
 fileclass_text.grid(columnspan=2, column=1, row=5)
 
-classified = tk.Label(root, text='Number Classified')
+number_img = tk.Label(root, text='None')
+number_img.grid(columnspan=1, column=3, row=4)
+
+classified = tk.Label(root, text='None')
 classified.grid(columnspan=1, column=3, row=5)
 
 # material buttons
@@ -473,13 +531,13 @@ unknown_btn.grid(column=5, row=6)
 
 # function buttons
 
-func0_text = tk.StringVar()
-func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:open_directory())
-func0_text.set('Root Directory')
-func0_btn.grid(column=5, row=0)
+# func0_text = tk.StringVar()
+# func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:open_directory())
+# func0_text.set('Root Directory')
+# func0_btn.grid(column=5, row=0)
 
 func1_text = tk.StringVar()
-func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_file())
+func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_directory())
 func1_text.set('Open Folder (O)')
 func1_btn.grid(column=5, row=1)
 
@@ -500,7 +558,7 @@ func4_btn.grid(column=5, row=4)
 
 func5_text = tk.StringVar()
 func5_btn = tk.Button(root, textvariable=func5_text, command=lambda:copy_files())
-func5_text.set('Copy Files')
+func5_text.set('Copy Files (C)')
 func5_btn.grid(column=5, row=5)
 
 # func6_text = tk.StringVar()
@@ -547,4 +605,4 @@ root.mainloop()
  # - (done) added more function buttons for backup
  # - (done) want to add function to extract multiple files at once and change directories to different objects so that when one object class material classification is complete the next folder can be selected without moving screens(plus use of hotkeys)
  # - find images that have not been classified quickly
- # - 
+ # - (done) added up and down keybinds to change object_classes
