@@ -41,7 +41,6 @@ object_class = '_______'
 
 # Read all folders in the selected Directory
 def open_directory():
-
     try:
         global root_dir
         global list_dir
@@ -80,7 +79,6 @@ def open_directory():
         print(list_dir[dir_index])
     except FileNotFoundError:
         print('Directory Not Selected (Open Folder)')
-
 
 def change_folder(event):
     global object_menu
@@ -121,7 +119,6 @@ def down_menu():
     except NameError:
         pass
 
-
 def open_file_multi(dir_path):
     #using global to create a global variable
     global list_images
@@ -147,11 +144,11 @@ def open_file_multi(dir_path):
     for i in object_list:
         if i.lower() in folder_path.lower():
             object_class = i
-            instructions['text'] = f'Please select material for {object_class}'
+            instructions['text'] = f'Please select the what material the {object_class} is made of'
             break
         else:
             object_class = 'Unknown Object'
-            instructions['text'] = f'Please select material for {object_class}'
+            instructions['text'] = f'Please select the what material the {object_class} is made of'
     
     # image filename dictionary for counting reference
     image_dict = {}
@@ -166,7 +163,7 @@ def open_file_multi(dir_path):
     'Glass' : [],
     'Paper' : [],
     'Unknown' : []
-
+    }
     # load material_dict if in folder (continue to work if work has already been done) else create material_dict.json 
     if f'{object_class}_material_dict.json' in os.listdir(folder):
         load_dict()
@@ -177,7 +174,6 @@ def open_file_multi(dir_path):
 
     # load first image filename_text and fileclass_text
     current_image = 0
-
     try:
         load_image()
         print('There are images in the folder')
@@ -408,11 +404,9 @@ def handle_keypress(event):
     elif event.char == "o":
         print("o pressed")    
         open_directory()
-
     elif event.char == "c":
         print("c pressed")    
         copy_files()
-
 
 def left(event):
     print("< pressed")    
@@ -482,7 +476,6 @@ w.grid(column=5, row=0)
 canvas = tk.Canvas(root, width=700, height=700)
 canvas.grid(columnspan=8, rowspan=7)
 
-
 # Instructions
 instructions = tk.Label(root, text=f'Please select the what material the {object_class} is made of')
 instructions.grid(columnspan=5, column=0, row=0)
@@ -537,7 +530,6 @@ unknown_text.set('Unknown (6)')
 unknown_btn.grid(column=5, row=6)
 
 # function buttons
-
 
 # func0_text = tk.StringVar()
 # func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:open_directory())
@@ -613,4 +605,4 @@ root.mainloop()
  # - (done) added more function buttons for backup
  # - (done) want to add function to extract multiple files at once and change directories to different objects so that when one object class material classification is complete the next folder can be selected without moving screens(plus use of hotkeys)
  # - find images that have not been classified quickly
- # - (done) added up and down keybinds to change object_classes
+ # - 
