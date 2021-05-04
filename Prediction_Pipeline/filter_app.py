@@ -318,7 +318,6 @@ def load_dict():
 # after classifying images create individual materials folder and files from dictionary to folder
 def copy_files():
     for i in material_dict:
-        if f'{object_class}_{i}' in os.listdir(prediction_folder):
             shutil.rmtree(f'{prediction_folder}/{object_class}_{i}')
             print(f"{i}'s original directory has be deleted")
         if len(material_dict[i]) != 0:
