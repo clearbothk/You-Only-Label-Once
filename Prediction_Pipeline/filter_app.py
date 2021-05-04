@@ -20,6 +20,8 @@ material_dict = {
     'Unknown' : []
 }
 
+stats_dict = {}
+
 object_material = {
     'Bottle' : ['Plastic', 'Glass'],
     'Can' : [],
@@ -196,7 +198,7 @@ def load_image():
     image_label.image = Image
     image_label.grid(column=0, columnspan=5, row=1, rowspan=3)
 
-    number['text'] = f'{int(current_image+1)} / {len(list_images)} '
+    number['text'] = f'{int(current_image+1)} / {len(list_images)}'
 
     #change filename_text
     filename_text['text'] = image_dict[current_image]
@@ -317,15 +319,26 @@ def load_dict():
 
 # after classifying images create individual materials folder and files from dictionary to folder
 def copy_files():
+    global stats_dict
+    global material_dict
+    # create folder to hold all classified object materials
+    os.makedirs((f'{prediction_folder}/Object Materials'), exist_ok=True)
+
+    stats_dict[object_class] = material_dict
+
+    # create and update stats dict
+    with open(f'{prediction_folder}/Object Materials/stats.json', 'w') as f:
+        json.dump(stats_dict,f)
+
     for i in material_dict:
-        if f'{object_class}_{i}' in os.listdir(prediction_folder):
-            shutil.rmtree(f'{prediction_folder}/{object_class}_{i}')
+        if f'{object_class}_{i}' in os.listdir(f'{prediction_folder}/Object Materials'):
+            shutil.rmtree(f'{prediction_folder}/Object Materials/{object_class}_{i}')
             print(f"{i}'s original directory has be deleted")
         if len(material_dict[i]) != 0:
-            os.makedirs((f'{prediction_folder}/{object_class}_{i}'),exist_ok=True)
+            os.makedirs(f'{prediction_folder}/Object Materials/{object_class}_{i}',exist_ok=True)
             print(f"{i}'s has been created")
             for file in material_dict[i]:
-                shutil.copy(file,f'{prediction_folder}/{object_class}_{i}')
+                shutil.copy(file,f'{prediction_folder}/Object Materials/{object_class}_{i}')
 
 # test command (testing)
 
