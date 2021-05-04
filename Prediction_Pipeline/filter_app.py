@@ -64,15 +64,18 @@ def open_directory():
 
     # Insert list of new options (tk._setit hooks them up to var)
     for i in list_dir:
-        w['menu'].add_command(label=i, command=tk._setit(object_menu, i, change_folder))
-    
-    object_menu.set(list_dir[0])
-    open_file_multi(dir_dict[object_menu.get()])
+        num_img = len([ i for i in os.listdir(dir_dict[i]) if '.jpg' in i])
+        w['menu'].add_command(label=f'{i} ({num_img})', command=tk._setit(object_menu, f'{i} ({num_img})', change_folder))
+
+    num_img_init = len([ i for i in os.listdir(dir_dict[list_dir[0]]) if '.jpg' in i])
+    object_menu.set(f'{list_dir[0]} ({num_img_init})')
+    open_file_multi(dir_dict[list_dir[0]])
 
 def change_folder(event):
     global object_menu
     global list_dir
-    open_file_multi(dir_dict[object_menu.get()])
+    # need to split() the object_menu.get() get just the object name without the num_img
+    open_file_multi(dir_dict[object_menu.get().split()[0]])
     
 # object_menu = StringVar()
 # object_menu.set('empty') # default value
@@ -102,11 +105,11 @@ def open_file_multi(dir_path):
     for i in object_list:
         if i.lower() in folder_path.lower():
             object_class = i
-            instructions['text'] = f'Please select the what material the {object_class} is made of'
+            instructions['text'] = f'Please select material for {object_class}'
             break
         else:
             object_class = 'Unknown Object'
-            instructions['text'] = f'Please select the what material the {object_class} is made of'
+            instructions['text'] = f'Please select material for {object_class}'
     
     # image filename dictionary for counting reference
     image_dict = {}
@@ -136,53 +139,53 @@ def open_file_multi(dir_path):
     save_dict()
     count_class()
 
-def open_file():
-    #using global to create a global variable
-    global list_images
-    global image_dict
-    global folder_path
-    global current_image
-    global folder
-    global object_class
+# def open_file():
+#     #using global to create a global variable
+#     global list_images
+#     global image_dict
+#     global folder_path
+#     global current_image
+#     global folder
+#     global object_class
 
-    # clicking button allows user to select specific directory
-    folder = filedialog.askdirectory()
+#     # clicking button allows user to select specific directory
+#     folder = filedialog.askdirectory()
 
-    # create list of image filenames 
-    list_images = sorted(os.listdir(folder)) 
-    list_images = [i for i in list_images if '.jpg' in i] # names of images into a list
-    os.chdir(folder)
-    folder_path = os.getcwd()
-    print(folder_path)
+#     # create list of image filenames 
+#     list_images = sorted(os.listdir(folder)) 
+#     list_images = [i for i in list_images if '.jpg' in i] # names of images into a list
+#     os.chdir(folder)
+#     folder_path = os.getcwd()
+#     print(folder_path)
 
-    # display what object class the folder belongs to and to control whether materials can be selected
-    for i in object_list:
-        if i.lower() in folder_path.lower():
-            object_class = i
-            instructions['text'] = f'Please select the what material the {object_class} is made of'
-        else:
-            object_class = 'Unknown Object'
-            instructions['text'] = f'Please select the what material the {object_class} is made of'
+#     # display what object class the folder belongs to and to control whether materials can be selected
+#     for i in object_list:
+#         if i.lower() in folder_path.lower():
+#             object_class = i
+#             instructions['text'] = f'Please select the what material the {object_class} is made of'
+#         else:
+#             object_class = 'Unknown Object'
+#             instructions['text'] = f'Please select the what material the {object_class} is made of'
     
-    # image filename dictionary for counting reference
-    image_dict = {}
-    for i in range(len(list_images)):
-        image_dict[i] = list_images[i]
-    print(f'{len(list_images)} image(s) in this folder')
+#     # image filename dictionary for counting reference
+#     image_dict = {}
+#     for i in range(len(list_images)):
+#         image_dict[i] = list_images[i]
+#     print(f'{len(list_images)} image(s) in this folder')
 
-    # load material_dict if in folder (continue to work if work has already been done) else create material_dict.json 
-    if f'{object_class}_material_dict.json' in os.listdir(folder):
-        load_dict()
-        print(f'material dictionary found, {object_class}_material_dict.json loaded')
-    else:
-        save_dict()
-        print(f'material dictionary not found, {object_class}_material_dict.json created and saved')
+#     # load material_dict if in folder (continue to work if work has already been done) else create material_dict.json 
+#     if f'{object_class}_material_dict.json' in os.listdir(folder):
+#         load_dict()
+#         print(f'material dictionary found, {object_class}_material_dict.json loaded')
+#     else:
+#         save_dict()
+#         print(f'material dictionary not found, {object_class}_material_dict.json created and saved')
 
-    # load first image filename_text and fileclass_text
-    current_image = 0
-    load_image()
-    save_dict()
-    count_class()
+#     # load first image filename_text and fileclass_text
+#     current_image = 0
+#     load_image()
+#     save_dict()
+#     count_class()
 
 def load_image():
     # load image included in open_file function`
@@ -371,7 +374,7 @@ def handle_keypress(event):
         select_material('Unknown')
     elif event.char == "o":
         print("o pressed")    
-        open_file()
+        open_directory()
 
 def left(event):
     print("< pressed")    
@@ -419,7 +422,7 @@ canvas = tk.Canvas(root, width=700, height=700)
 canvas.grid(columnspan=8, rowspan=7)
 
 # instructions
-instructions = tk.Label(root, text=f'Please select the what material the {object_class} is made of')
+instructions = tk.Label(root, text=f'<---- Use Drop Down Menu AFTER Selecting Cropped Folder ----> ')
 instructions.grid(columnspan=4, column=1, row=0)
 
 number = tk.Label(root, text='Number of Images')
@@ -475,13 +478,13 @@ unknown_btn.grid(column=5, row=6)
 
 func0_text = tk.StringVar()
 func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:open_directory())
-func0_text.set('Root Directory')
+func0_text.set('Cropped Folder')
 func0_btn.grid(column=5, row=0)
 
-func1_text = tk.StringVar()
-func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_file())
-func1_text.set('Open Folder (O)')
-func1_btn.grid(column=5, row=1)
+# func1_text = tk.StringVar()
+# func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_file())
+# func1_text.set('Open Folder (O)')
+# func1_btn.grid(column=5, row=1)
 
 func2_text = tk.StringVar()
 func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_material_class())

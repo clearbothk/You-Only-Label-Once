@@ -53,7 +53,7 @@ def load():
 
    close_text = tk.StringVar()
    close_btn = tk.Button(win, textvariable=close_text, command=close, height=3, width=50, state='disabled')
-   close_text.set('Close Window')
+   close_text.set('Begin YOLO Labelling')
    close_btn.grid(column=0, row=4)
 
 
