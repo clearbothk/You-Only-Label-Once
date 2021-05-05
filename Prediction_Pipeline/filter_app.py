@@ -17,7 +17,9 @@ material_dict = {
     'Styrofoam' : [],
     'Glass' : [],
     'Paper' : [],
-    'Unknown' : []
+    'Unknown' : [],
+    'FaceMask' : [],
+    'TetraPack' : []
 }
 
 # dict for recording classified object materials for stat tracking
@@ -154,15 +156,17 @@ def open_file_multi(dir_path):
     image_dict = {}
     for i in range(len(list_images)):
         image_dict[i] = list_images[i]
-    print(f'{len(list_images)} image(s) in this folder')
-
+    print(f'{len(list_images)} image(s) in this folder(list)')
+    print(f'{len(image_dict)} image(s) in this folder(dict)')
     material_dict = {
-    'Plastic' : [],
-    'Metal' : [],
-    'Styrofoam' : [],
-    'Glass' : [],
-    'Paper' : [],
-    'Unknown' : []
+        'Plastic' : [],
+        'Metal' : [],
+        'Styrofoam' : [],
+        'Glass' : [],
+        'Paper' : [],
+        'Unknown' : [],
+        'FaceMask' : [],
+        'TetraPack' : []
     }
     # load material_dict if in folder (continue to work if work has already been done) else create material_dict.json 
     if f'{object_class}_material_dict.json' in os.listdir(folder):
@@ -192,7 +196,7 @@ def load_image():
     global current_image 
     global image_path
     global image_label
-    image_path = folder_path + '/' + image_dict[current_image]
+    image_path = f'{folder_path}/{image_dict[current_image]}'
     MAX_SIZE = (300, 300)
     image = Image.open(image_path)
     image.thumbnail(MAX_SIZE)
@@ -277,6 +281,22 @@ def select_material(material):
     except NameError:
         pass
 
+def skip_select_material(material):
+    global material_dict
+    global image_dict
+    global folder_path
+    try:
+        wipe_dict(2)
+        for i in range(len(image_dict)):
+            material_dict[material].append(f'{folder_path}/{image_dict[i]}')
+        if image_path in material_dict[material]:
+                fileclass_text['text'] = material
+        print(f'All {object_class}(s) have been classified as {material}')
+        save_dict()
+        count_class()
+    except NameError:
+        pass
+
 def delete_material_class():
     try:
         for i in material_dict:
@@ -300,21 +320,38 @@ def display_dict():
         print(i, len(material_dict[i]))
 
 # Wipe Dict clean
-def wipe_dict():
+def wipe_dict(type_):
     global material_dict
-    material_dict = {
-        'Plastic' : [],
-        'Metal' : [],
-        'Styrofoam' : [],
-        'Glass' : [],
-        'Paper' : [],
-        'Unknown' : []
-    }
-    fileclass_text['text'] = 'Not Yet Classified'
-    save_dict()
-    count_class()
-    print('material_dict has been returned to clean slate')
-
+    # for shift-del/bksp
+    if type_ == 1:
+        load_dict()
+        material_dict = {
+            'Plastic' : [],
+            'Metal' : [],
+            'Styrofoam' : [],
+            'Glass' : [],
+            'Paper' : [],
+            'Unknown' : [],
+            'FaceMask' : [],
+            'TetraPack' : []
+        }
+        fileclass_text['text'] = 'Not Yet Classified'
+        save_dict()
+        count_class()
+        print('material_dict has been returned to clean slate')
+    # for skip_select_material
+    if type_ == 2:
+        load_dict()
+        material_dict = {
+            'Plastic' : [],
+            'Metal' : [],
+            'Styrofoam' : [],
+            'Glass' : [],
+            'Paper' : [],
+            'Unknown' : [],
+            'FaceMask' : [],
+            'TetraPack' : []
+        }
 # counting classified images
 def count_class():
     global count
@@ -440,7 +477,7 @@ def deldel(event):
 def deldelclean(event):
     print('shift del/bksp pressed')
     try:
-        wipe_dict()
+        wipe_dict(1)
     except NameError:
         pass
 
@@ -451,8 +488,8 @@ def quitquit(event):
 
 # Starts
 root = tk.Tk()
-root.geometry('700x650')
-root.title('Object Material Filter V2.2')
+root.geometry('700x700')
+root.title('Object Material Filter V2.3')
 
 # KeyBinding Controls
 root.bind("<Key>", handle_keypress)
@@ -529,12 +566,22 @@ unknown_btn = tk.Button(root, textvariable=unknown_text, command=lambda:select_m
 unknown_text.set('Unknown (6)')
 unknown_btn.grid(column=5, row=6)
 
-# function buttons
+facemask_text = tk.StringVar()
+facemask_btn = tk.Button(root, textvariable=facemask_text, command=lambda:skip_select_material('FaceMask'))
+facemask_text.set('Face Masks')
+facemask_btn.grid(column=0, row=7)
 
-# func0_text = tk.StringVar()
-# func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:open_directory())
-# func0_text.set('Root Directory')
-# func0_btn.grid(column=5, row=0)
+plasbag_text = tk.StringVar()
+plasbag_btn = tk.Button(root, textvariable=plasbag_text, command=lambda:skip_select_material('Plastic'))
+plasbag_text.set('Plastic Bags')
+plasbag_btn.grid(column=1, row=7)
+
+tetra_text = tk.StringVar()
+tetra_btn = tk.Button(root, textvariable=tetra_text, command=lambda:skip_select_material('TetraPack'))
+tetra_text.set('Box Drinks')
+tetra_btn.grid(column=2, row=7)
+
+# function buttons
 
 func1_text = tk.StringVar()
 func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_directory())
@@ -601,8 +648,11 @@ root.mainloop()
 # Version 1.0 02/05/2021
  # - finished first complete interation
 
-# Version 1.1-2 02/05/2021
+# Version 1.1-2.3 02/05/2021
  # - (done) added more function buttons for backup
  # - (done) want to add function to extract multiple files at once and change directories to different objects so that when one object class material classification is complete the next folder can be selected without moving screens(plus use of hotkeys)
- # - find images that have not been classified quickly
- # - 
+ # - (done) added up and down arrow keybinds to change object_class
+ # - (done) added skip_select_material for face masks/ plastic bags/ box drinks
+ # - (done) added Option Menu (object selection)
+ # - (to be added) find images that have not been classified quickly
+ # - (done) try and except added to clear avoidable errors
