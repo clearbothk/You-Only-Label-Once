@@ -120,6 +120,10 @@ print('here 2')
 main.geometry('700x800')
 main.title('Main GUI')
 
+ico = Image.open('clearbot.png')
+photo = ImageTk.PhotoImage(ico)
+main.wm_iconphoto(False, photo)
+
 
 # KeyBinding Controls
 # root.bind("<Key>", handle_keypress)
