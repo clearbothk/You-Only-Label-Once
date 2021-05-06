@@ -3,11 +3,6 @@ from tkinter import filedialog
 import tkinter as tk
 import platform
 
-<<<<<<< Updated upstream
-def get_source():
-   global SOURCE
-   global source_name
-=======
 def load(window):
 
    def get_source():
@@ -47,57 +42,32 @@ def load(window):
       except NameError:
          close_name.set('Source directory not found')
          return 
->>>>>>> Stashed changes
 
-   SOURCE = filedialog.askdirectory()
-   source_name.set(SOURCE)
+      try:
+         if PROJECT:
+            counter += 1
+      except NameError:
+         close_name.set('Destination directory not found')
+         return
 
-def get_destination():
-   global PROJECT
-   global destination_name
+      try:
+         if YOLO:
+            counter += 1
+      except NameError:
+         close_name.set('YOLO directory not found')
+         return
 
-   PROJECT = filedialog.askdirectory()
-   destination_name.set(PROJECT)
+      if SOURCE == PROJECT:
+         close_name.set('Source and destination directories cannot be the same!')
+      else:
+         if counter == 3:
+            # win.destroy()
+            win.quit()
+            
+            win.update()
 
-def get_yolo():
-   global YOLO
-   global yolo_name
 
-   YOLO = filedialog.askdirectory()
-   yolo_name.set(YOLO)
 
-def close():
-   global close_name
-   counter = 0
-
-   try:
-      if SOURCE:
-         counter += 1
-   except NameError:
-      close_name.set('Source directory not found')
-      return 
-
-   try:
-      if PROJECT:
-         counter += 1
-   except NameError:
-      close_name.set('Destination directory not found')
-      return
-
-   try:
-      if YOLO:
-         counter += 1
-   except NameError:
-      close_name.set('YOLO directory not found')
-      return
-
-   if SOURCE == PROJECT:
-      close_name.set('Source and destination directories cannot be the same!')
-   else:
-      if counter == 3:
-         win.destroy()
-
-def load():
    global source_name
    global destination_name
    global yolo_name
@@ -105,7 +75,7 @@ def load():
    global win
    global close_btn
 
-   win = tk.Tk()
+   win = tk.Toplevel(window)
    win.title('Load Directories')
    if platform.system() == 'Windows' :
       win.geometry("700x650")
@@ -152,7 +122,7 @@ def load():
    l4 = tk.Label(master=win,textvariable=close_name, height=5, width=100)
    l4.grid(column=0, row=7)
 
-
+   print('load finished')
    #win.destroy()
    #win.lift()
    #win.call('wm', 'attributes', '.', '-topmost', True)
@@ -160,6 +130,7 @@ def load():
    
    win.mainloop()
 
+
+   win.destroy()
    return SOURCE, PROJECT, YOLO
 
-load()
