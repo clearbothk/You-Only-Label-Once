@@ -3,19 +3,24 @@ from tkinter import filedialog
 import tkinter as tk
 import platform
 
+<<<<<<< Updated upstream
 
 def get_source():
 
    global SOURCE
    global source_name
+=======
+def load(window):
+>>>>>>> Stashed changes
 
-   SOURCE = filedialog.askdirectory()
-   source_name.set(SOURCE)
+   def get_source():
+      global SOURCE
+      global source_name
 
-def get_destination():
-   global PROJECT
-   global destination_name
+      SOURCE = filedialog.askdirectory()
+      source_name.set(SOURCE)
 
+<<<<<<< Updated upstream
    PROJECT = filedialog.askdirectory()
    destination_name.set(PROJECT)
    close_btn['state'] = 'normal'
@@ -25,12 +30,69 @@ def close():
    win.destroy()
 
 def load():
+=======
+   def get_destination():
+      global PROJECT
+      global destination_name
+
+      PROJECT = filedialog.askdirectory()
+      destination_name.set(PROJECT)
+
+   def get_yolo():
+      global YOLO
+      global yolo_name
+
+      YOLO = filedialog.askdirectory()
+      yolo_name.set(YOLO)
+
+   def close():
+      global close_name
+      counter = 0
+
+      try:
+         if SOURCE:
+            counter += 1
+      except NameError:
+         close_name.set('Source directory not found')
+         return 
+
+      try:
+         if PROJECT:
+            counter += 1
+      except NameError:
+         close_name.set('Destination directory not found')
+         return
+
+      try:
+         if YOLO:
+            counter += 1
+      except NameError:
+         close_name.set('YOLO directory not found')
+         return
+
+      if SOURCE == PROJECT:
+         close_name.set('Source and destination directories cannot be the same!')
+      else:
+         if counter == 3:
+            # win.destroy()
+            win.quit()
+            
+            win.update()
+
+
+
+>>>>>>> Stashed changes
    global source_name
    global destination_name
    global win
    global close_btn
 
+<<<<<<< Updated upstream
    win = tk.Tk()
+=======
+   win = tk.Toplevel(window)
+   win.title('Load Directories')
+>>>>>>> Stashed changes
    if platform.system() == 'Windows' :
       win.geometry("700x500")
    if platform.system() == 'Darwin':
@@ -61,10 +123,15 @@ def load():
    close_text.set('Begin YOLO Labelling')
    close_btn.grid(column=0, row=4)
 
-
+   print('load finished')
    #win.destroy()
    win.mainloop()
 
+<<<<<<< Updated upstream
    return SOURCE, PROJECT
+=======
 
-load()
+   win.destroy()
+   return SOURCE, PROJECT, YOLO
+>>>>>>> Stashed changes
+
