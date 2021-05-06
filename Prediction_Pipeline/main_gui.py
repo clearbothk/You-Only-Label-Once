@@ -22,6 +22,7 @@ from filter_app_main_gui import filter_app
 original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
+print('here 1')
 # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 
@@ -29,6 +30,7 @@ def step1():
     from load_source import load
     global SOURCE, PROJECT, YOLO, NAME
     SOURCE, PROJECT, YOLO = load(main)
+    print(SOURCE, PROJECT, YOLO)
 
     """CHECK YOLO"""
     YOLO = clone_yolo(YOLO)
@@ -62,7 +64,7 @@ def step1():
 
     """PREDICT"""
     os.chdir(YOLO)
-    os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5')
+    os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.6 --line-thickness 1')
 
     os.chdir(PROJECT + NAME)
     
@@ -75,14 +77,12 @@ def step1():
         if file[-4:] == '.jpg':
             shutil.move(file, 'bounded_images')
 
+    # Create a popup to tell user that Step 2 ready
+
 def step2():
     """TKINTER"""
-<<<<<<< Updated upstream
-    path = '/Users/jlee/Code-Data/Clearbot_Project/testing/2021-05-05/predictions_00_22'
+    path = PROJECT + NAME
     correct_check(path, main)
-=======
-    correct_check(PROJECT + NAME, main)
->>>>>>> Stashed changes
 
     """CROP IMAGES"""
     with open(original_path + '/item_classes.json') as f:
@@ -96,7 +96,6 @@ def step2():
 
     labels_path = glob.glob(path + '/labels/*.txt')
     image_path = glob.glob(path + '/images/*.jpg')
-
     #files = [i.split('/')[-1][:-4] for i in labels_path]
     files = [i[-25:-4] for i in labels_path]
 
@@ -105,13 +104,11 @@ def step2():
 
     crop_images(files, path, item_class_dict)
 
+    # Should have a close button or have copy files automatically close window
+
 def step3():
-<<<<<<< Updated upstream
-    path = '/Users/jlee/Code-Data/Clearbot_Project/testing/2021-05-05/predictions_00_22'
-    filter_app(path + '/Correct/Cropped', main)
-=======
-    filter_app(PROJECT + NAME + '/Correct/cropped', main)
->>>>>>> Stashed changes
+    path = PROJECT + NAME
+    filter_app(path + '/Correct/cropped', main)
 
 def step4():
     pass
@@ -119,13 +116,10 @@ def step4():
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 main = tk.Tk()
-<<<<<<< Updated upstream
 print('here 2')
-main.geometry('700x700')
-=======
 main.geometry('700x800')
->>>>>>> Stashed changes
 main.title('Main GUI')
+
 
 # KeyBinding Controls
 # root.bind("<Key>", handle_keypress)
@@ -140,41 +134,72 @@ main.title('Main GUI')
 # root.bind('<Down>', down)
 
 # Setting Canvas
-canvas_main = tk.Canvas(main, width=700, height=700)
+canvas_main = tk.Canvas(main, width=700, height=750)
 canvas_main.grid(columnspan=2, rowspan=6)
 
 # Instructions
 
-intro = tk.Label(main, text='ClearBot Auto Labeling Program')
+intro = tk.Label(main, text='ClearBot Auto Labeling Program', font=('Calibri', 25))
 intro.grid(column=0, columnspan=2, row=0)
 
-func1_title = tk.Label(main, text=
-'''Step 1. 
-Please select the input/output Directories 
-and where you have or want the YOLOv5 
-files stored/ to be stored''', justify='left', anchor=W)
+func1_title = tk.Label(main, 
+                        text='''Step 1. 
+Select Input Directory (Source)
+Select Output Directory (Destination)
+Select YOLOv5 Installation Directory (YOLO)''', 
+                        justify='left', 
+                        anchor=W, 
+                        width=45,
+                        height=6,
+                        font=('Calibri', 12))
 func1_title.grid(column=0, row=1)
 
-func2_title = tk.Label(main, text=
-'''Step 2.
+func2_title = tk.Label(main, 
+                        text='''Step 2.
 Filter Images by Correct and Incorrect
-A Corrent image with have all objects bounded
-and bounded correctly else the image is 
-Incorrect''', justify='left', anchor=W)
+'Correct' image has all objects bounded correctly.
+'Incorrect' image has poorly bounded or missed objects.
+'Remove' image is for unwanted photos.
+'Copy Files' when complete.''', 
+                        justify='left', 
+                        anchor=W, 
+                        width=45,
+                        height=6,
+                        font=('Calibri', 12))
 func2_title.grid(column=0, row=2)
 
-func3_title = tk.Label(main, text=
-'''Step 3.
-Filter objects by material''', justify='left')
+func3_title = tk.Label(main, 
+                        text='''Step 3.
+Filter objects by material
+Make sure to copy files for each category before 
+moving to the next.
+''', 
+                        justify='left',
+                        anchor=W,
+                        width=45,
+                        height=6,
+                        font=('Calibri', 12))
 func3_title.grid(column=0, row=3)
 
-func4_title = tk.Label(main, text=
-'''Step 4.
-Display statistics of current batch of images''', justify='left')
+func4_title = tk.Label(main, 
+                        text='''Step 4.
+Display statistics for current batch of images''', 
+                        justify='left',
+                        anchor=W,
+                        width=45,
+                        height=6,
+                        font=('Calibri', 12))
 func4_title.grid(column=0, row=4)
 
-# func5_title = tk.Label(root, text='None')
-# func5_title.grid(column=0, row=5)
+func5_title = tk.Label(main, 
+                        text='''Step 5.
+''', 
+                        justify='left',
+                        anchor=W,
+                        width=45,
+                        height=6,
+                        font=('Calibri', 12))
+func5_title.grid(column=0, row=5)
 
 # func6_title = tk.Label(root, text='None')
 # func6_title.grid(column=0, row=6)
@@ -182,28 +207,28 @@ func4_title.grid(column=0, row=4)
 # Function buttons
 
 func1_text = tk.StringVar()
-func1_btn = tk.Button(main, textvariable=func1_text, command=step1)
-func1_text.set('Button 1')
+func1_btn = tk.Button(main, textvariable=func1_text, command=step1, height=4, width=30, borderwidth=5)
+func1_text.set('Step 1')
 func1_btn.grid(column=1, row=1)
 
 func2_text = tk.StringVar()
-func2_btn = tk.Button(main, textvariable=func2_text, command=step2)
-func2_text.set('Button 2')
+func2_btn = tk.Button(main, textvariable=func2_text, command=step2, height=4, width=30, borderwidth=5)
+func2_text.set('Step 2')
 func2_btn.grid(column=1, row=2)
 
 func3_text = tk.StringVar()
-func3_btn = tk.Button(main, textvariable=func3_text, command=step3)
-func3_text.set('Button 3')
+func3_btn = tk.Button(main, textvariable=func3_text, command=step3, height=4, width=30, borderwidth=5)
+func3_text.set('Step 3')
 func3_btn.grid(column=1, row=3)
 
 func4_text = tk.StringVar()
-func4_btn = tk.Button(main, textvariable=func4_text)
-func4_text.set('Button 4')
+func4_btn = tk.Button(main, textvariable=func4_text, height=4, width=30, borderwidth=5)
+func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
 
 func5_text = tk.StringVar()
-func5_btn = tk.Button(main, textvariable=func5_text)
-func5_text.set('Button 5')
+func5_btn = tk.Button(main, textvariable=func5_text, height=4, width=30, borderwidth=5)
+func5_text.set('Step 5')
 func5_btn.grid(column=1, row=5)
 
 # func6_text = tk.StringVar()

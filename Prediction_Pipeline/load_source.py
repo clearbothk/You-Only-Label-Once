@@ -8,23 +8,29 @@ def load(window):
    def get_source():
       global SOURCE
       global source_name
-
+      win.attributes('-topmost', False)
       SOURCE = filedialog.askdirectory()
       source_name.set(SOURCE)
+      win.lift()
+      win.update()
 
    def get_destination():
       global PROJECT
       global destination_name
-
+      win.attributes('-topmost', False)
       PROJECT = filedialog.askdirectory()
       destination_name.set(PROJECT)
+      win.lift()
+      win.update()
 
    def get_yolo():
       global YOLO
       global yolo_name
-
+      win.attributes('-topmost', False)
       YOLO = filedialog.askdirectory()
       yolo_name.set(YOLO)
+      win.lift()
+      win.update()
 
    def close():
       global close_name
@@ -118,6 +124,10 @@ def load(window):
 
    print('load finished')
    #win.destroy()
+   #win.lift()
+   #win.call('wm', 'attributes', '.', '-topmost', True)
+   win.attributes('-topmost', True)
+   
    win.mainloop()
 
 
