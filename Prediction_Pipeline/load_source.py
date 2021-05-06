@@ -1,6 +1,7 @@
 #from main import SOURCE
 from tkinter import filedialog
 import tkinter as tk
+import platform
 
 def get_source():
    global SOURCE
@@ -60,16 +61,14 @@ def load():
    global close_btn
 
    win = tk.Tk()
-<<<<<<< Updated upstream
-   win.geometry("700x400")
-=======
+
    win.title('Load Directories')
    if platform.system() == 'Windows' :
       win.geometry("700x650")
    if platform.system() == 'Darwin':
       win.geometry("900x750")
    win.resizable(False, False)
->>>>>>> Stashed changes
+
 
    source_text = tk.StringVar()
    source_btn = tk.Button(win, textvariable=source_text, command=get_source, height=5, width=50)
@@ -102,11 +101,7 @@ def load():
    l3.grid(column=0, row=5)
 
    close_text = tk.StringVar()
-<<<<<<< Updated upstream
-   close_btn = tk.Button(win, textvariable=close_text, command=close, height=3, width=50, state='disabled')
-   close_text.set('Close Window')
-   close_btn.grid(column=0, row=4)
-=======
+    
    close_btn = tk.Button(win, textvariable=close_text, command=close, height=3, width=50)
    close_text.set('Begin YOLO Labelling')
    close_btn.grid(column=0, row=6)
@@ -114,16 +109,9 @@ def load():
    close_name = tk.StringVar()
    l4 = tk.Label(master=win,textvariable=close_name, height=5, width=100)
    l4.grid(column=0, row=7)
->>>>>>> Stashed changes
 
 
    #win.destroy()
    win.mainloop()
 
    return SOURCE, PROJECT, YOLO
-
-<<<<<<< Updated upstream
-
-=======
-#load()
->>>>>>> Stashed changes

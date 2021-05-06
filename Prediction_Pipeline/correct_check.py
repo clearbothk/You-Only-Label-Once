@@ -12,6 +12,7 @@ import shutil
 correct_dict = {
     "Correct" : [],
     "Incorrect" : [],
+    "Remove" : [],
 }
 
 def open_file():
@@ -181,6 +182,7 @@ def wipe_dict(event):
     correct_dict = {
         'Correct' : [],
         'Incorrect' : [],
+        'Remove' : [],
     }
     save_dict()
     count_class()
@@ -198,6 +200,9 @@ def copy_files():
     os.makedirs("./Incorrect/",exist_ok=True)
     os.makedirs("./Incorrect/images",exist_ok=True)
     os.makedirs("./Incorrect/labels",exist_ok=True)
+    os.makedirs("./Remove/",exist_ok=True)
+    os.makedirs("./Remove/images",exist_ok=True)
+    os.makedirs("./Remove/labels",exist_ok=True)
 
     for file in correct_dict["Correct"]:
         try:
@@ -213,6 +218,13 @@ def copy_files():
             shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Incorrect/labels/{file_name[:-4]}.txt')
         except FileNotFoundError:
             print(f'Label for {file_name} not found!')
+    for file in correct_dict["Remove"]:
+        try:
+            file_name = file.split("/")[-1]
+            shutil.copy(f'{base}/fullsize_images/{file_name}', f'{original}/Remove/images/{file_name}')
+            shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Remove/labels/{file_name[:-4]}.txt')
+        except FileNotFoundError:
+            print(f'Label for {file_name} not found!')
 
 # Keybind Functions
 
@@ -224,6 +236,9 @@ def handle_keypress(event):
     elif event.char == "2":
         print("2 pressed")
         select_label('Incorrect')
+    elif event.char == "3":
+        print("3 pressed")
+        select_label('Remove')
     elif event.char == "o":
         print("o pressed")
         open_file()
@@ -305,7 +320,7 @@ filename_text.grid(columnspan=2, column=1, row=4)
 filename_title = tk.Label(root, text='Label:')
 filename_title.grid(columnspan=1, column=0, row=5)
 
-fileclass_text = tk.Label(root, text='Correct/Incorrect')
+fileclass_text = tk.Label(root, text='Correct/Incorrect/Remove')
 fileclass_text.grid(columnspan=2, column=1, row=5)
 
 # labelling buttons
@@ -318,6 +333,11 @@ incorrect_txt = tk.StringVar()
 incorrect_btn = tk.Button(root, textvariable=incorrect_txt, command=lambda:select_label('Incorrect'))
 incorrect_txt.set('Incorrect (2)')
 incorrect_btn.grid(column=1, row=6)
+
+remove_txt = tk.StringVar()
+remove_btn = tk.Button(root, textvariable=remove_txt, command=lambda:select_label('Remove'))
+remove_txt.set('Remove (3)')
+remove_btn.grid(column=3, row=6)
 
 # finish
 root.mainloop()
