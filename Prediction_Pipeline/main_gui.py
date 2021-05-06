@@ -22,7 +22,6 @@ from filter_app_main_gui import filter_app
 original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
-print('here 1')
 # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 
@@ -30,7 +29,6 @@ def step1():
     from load_source import load
     global SOURCE, PROJECT, YOLO, NAME
     SOURCE, PROJECT, YOLO = load(main)
-    print(SOURCE, PROJECT, YOLO)
 
     """CHECK YOLO"""
     YOLO = clone_yolo(YOLO)
@@ -79,8 +77,12 @@ def step1():
 
 def step2():
     """TKINTER"""
+<<<<<<< Updated upstream
     path = '/Users/jlee/Code-Data/Clearbot_Project/testing/2021-05-05/predictions_00_22'
     correct_check(path, main)
+=======
+    correct_check(PROJECT + NAME, main)
+>>>>>>> Stashed changes
 
     """CROP IMAGES"""
     with open(original_path + '/item_classes.json') as f:
@@ -94,6 +96,7 @@ def step2():
 
     labels_path = glob.glob(path + '/labels/*.txt')
     image_path = glob.glob(path + '/images/*.jpg')
+
     #files = [i.split('/')[-1][:-4] for i in labels_path]
     files = [i[-25:-4] for i in labels_path]
 
@@ -103,8 +106,12 @@ def step2():
     crop_images(files, path, item_class_dict)
 
 def step3():
+<<<<<<< Updated upstream
     path = '/Users/jlee/Code-Data/Clearbot_Project/testing/2021-05-05/predictions_00_22'
     filter_app(path + '/Correct/Cropped', main)
+=======
+    filter_app(PROJECT + NAME + '/Correct/cropped', main)
+>>>>>>> Stashed changes
 
 def step4():
     pass
@@ -112,8 +119,12 @@ def step4():
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 main = tk.Tk()
+<<<<<<< Updated upstream
 print('here 2')
 main.geometry('700x700')
+=======
+main.geometry('700x800')
+>>>>>>> Stashed changes
 main.title('Main GUI')
 
 # KeyBinding Controls
