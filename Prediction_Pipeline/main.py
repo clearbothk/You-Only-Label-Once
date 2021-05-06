@@ -7,12 +7,10 @@ from datetime import date, datetime
 from yolo_check import clone_yolo
 from convert_images import convert, rename
 from load_source import load
-
+from correct_check import correct_check
 from crop_images import crop_images
+from filter_app import filter_app
 import subprocess
-
-# Clone Repository if yolov5 not already in the root folder
-
 
 original_path = os.getcwd()
 date = str(date.today())
@@ -22,7 +20,6 @@ SOURCE, PROJECT, YOLO = load()
 
 """CHECK YOLO"""
 YOLO = clone_yolo(YOLO)
-
 WEIGHTS = original_path + '/best.pt'
 PROJECT = PROJECT + '/' + date + '/'
 NAME = 'predictions_' + time
@@ -52,9 +49,6 @@ print(f'{source_count} images found in source folder.\n')
 
 """PREDICT"""
 os.chdir(YOLO)
-
-print(YOLO)
-
 os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5')
 
 # subprocess = subprocess.Popen(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5', shell=True, stdout=subprocess.PIPE)
@@ -78,7 +72,8 @@ for file in os.listdir():
         shutil.move(file, 'bounded_images')
 
 """TKINTER"""
-import correct_check
+#import correct_check
+correct_check()
 
 """CROP IMAGES"""
 with open(original_path + '/item_classes.json') as f:
@@ -100,6 +95,6 @@ for cat in item_class_dict.values():
 
 crop_images(files, path, item_class_dict)
 
-import filter_app
-
+#import filter_app
+filter_app()
 
