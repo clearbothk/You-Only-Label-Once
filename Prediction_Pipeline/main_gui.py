@@ -1,0 +1,229 @@
+from tkinter import filedialog
+from tkinter import *
+from PIL import ImageTk, Image
+import tkinter as tk
+import os
+import glob
+from time import localtime, strftime
+import json
+import shutil
+from datetime import date, datetime
+
+# import over .py file to call the functions-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
+
+from yolo_check import clone_yolo
+from convert_images import convert, rename
+from correct_check_main_gui import correct_check
+from crop_images import crop_images
+from filter_app_main_gui import filter_app
+
+# Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
+
+original_path = os.getcwd()
+date = str(date.today())
+time = datetime.now().strftime("%H_%M")
+print('here 1')
+# Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
+
+
+def step1():
+    from load_source import load
+    global SOURCE, PROJECT, YOLO, NAME
+    SOURCE, PROJECT, YOLO = load(main)
+    print(SOURCE, PROJECT, YOLO)
+
+    """CHECK YOLO"""
+    YOLO = clone_yolo(YOLO)
+    WEIGHTS = original_path + '/best.pt'
+    PROJECT = PROJECT + '/' + date + '/'
+    NAME = 'predictions_' + time
+    
+    print('check yolo done')
+    try:
+        os.mkdir(PROJECT)
+    except:
+        pass
+
+    # Copy source images into date folder
+    if 'images' not in os.listdir(PROJECT):
+        print('Copying images...\n')
+    else:
+        if os.path.exists(PROJECT + 'images'):
+            shutil.rmtree(PROJECT + 'images')
+            shutil.rmtree(PROJECT + 'fullsize_images')
+
+    shutil.copytree(SOURCE, PROJECT + 'fullsize_images')
+    shutil.copytree(SOURCE, PROJECT + 'images')
+    copied_source = PROJECT + 'images/'
+    rename(PROJECT + 'fullsize_images/', date)
+    convert(copied_source, date)
+
+    source_count = len(os.listdir(SOURCE))
+    print(f'Source location is: {SOURCE}')
+    print(f'{source_count} images found in source folder.\n')
+
+    """PREDICT"""
+    os.chdir(YOLO)
+    os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5')
+
+    os.chdir(PROJECT + NAME)
+    
+    # Copy bounded predictions to 'BOUNDED_IMAGES'
+    try:
+        os.mkdir('bounded_images')
+    except:
+        pass
+    for file in os.listdir():
+        if file[-4:] == '.jpg':
+            shutil.move(file, 'bounded_images')
+
+def step2():
+    """TKINTER"""
+    path = '/Users/jlee/Code-Data/Clearbot_Project/testing/2021-05-05/predictions_00_22'
+    correct_check(path, main)
+
+    """CROP IMAGES"""
+    with open(original_path + '/item_classes.json') as f:
+        item_class_dict = json.load(f)
+
+    os.chdir('..')
+    os.chdir(os.getcwd() + '/' + NAME + '/Correct')
+    os.mkdir('cropped')
+
+    path = os.getcwd()
+
+    labels_path = glob.glob(path + '/labels/*.txt')
+    image_path = glob.glob(path + '/images/*.jpg')
+    #files = [i.split('/')[-1][:-4] for i in labels_path]
+    files = [i[-25:-4] for i in labels_path]
+
+    for cat in item_class_dict.values():
+        os.mkdir('./cropped/' + cat)
+
+    crop_images(files, path, item_class_dict)
+
+def step3():
+    path = '/Users/jlee/Code-Data/Clearbot_Project/testing/2021-05-05/predictions_00_22'
+    filter_app(path + '/Correct/Cropped', main)
+
+def step4():
+    pass
+
+# GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
+
+main = tk.Tk()
+print('here 2')
+main.geometry('700x700')
+main.title('Main GUI')
+
+# KeyBinding Controls
+# root.bind("<Key>", handle_keypress)
+# root.bind("<Left>", left)
+# root.bind('<Right>', right)
+# root.bind('<Escape>', quitquit)
+# root.bind('<BackSpace>', deldel)
+# root.bind('<Shift-BackSpace>', deldelclean)
+# root.bind('<Delete>', deldel)
+# root.bind('<Shift-Delete>', deldelclean)
+# root.bind('<Up>', up)
+# root.bind('<Down>', down)
+
+# Setting Canvas
+canvas_main = tk.Canvas(main, width=700, height=700)
+canvas_main.grid(columnspan=2, rowspan=6)
+
+# Instructions
+
+intro = tk.Label(main, text='ClearBot Auto Labeling Program')
+intro.grid(column=0, columnspan=2, row=0)
+
+func1_title = tk.Label(main, text=
+'''Step 1. 
+Please select the input/output Directories 
+and where you have or want the YOLOv5 
+files stored/ to be stored''', justify='left', anchor=W)
+func1_title.grid(column=0, row=1)
+
+func2_title = tk.Label(main, text=
+'''Step 2.
+Filter Images by Correct and Incorrect
+A Corrent image with have all objects bounded
+and bounded correctly else the image is 
+Incorrect''', justify='left', anchor=W)
+func2_title.grid(column=0, row=2)
+
+func3_title = tk.Label(main, text=
+'''Step 3.
+Filter objects by material''', justify='left')
+func3_title.grid(column=0, row=3)
+
+func4_title = tk.Label(main, text=
+'''Step 4.
+Display statistics of current batch of images''', justify='left')
+func4_title.grid(column=0, row=4)
+
+# func5_title = tk.Label(root, text='None')
+# func5_title.grid(column=0, row=5)
+
+# func6_title = tk.Label(root, text='None')
+# func6_title.grid(column=0, row=6)
+
+# Function buttons
+
+func1_text = tk.StringVar()
+func1_btn = tk.Button(main, textvariable=func1_text, command=step1)
+func1_text.set('Button 1')
+func1_btn.grid(column=1, row=1)
+
+func2_text = tk.StringVar()
+func2_btn = tk.Button(main, textvariable=func2_text, command=step2)
+func2_text.set('Button 2')
+func2_btn.grid(column=1, row=2)
+
+func3_text = tk.StringVar()
+func3_btn = tk.Button(main, textvariable=func3_text, command=step3)
+func3_text.set('Button 3')
+func3_btn.grid(column=1, row=3)
+
+func4_text = tk.StringVar()
+func4_btn = tk.Button(main, textvariable=func4_text)
+func4_text.set('Button 4')
+func4_btn.grid(column=1, row=4)
+
+func5_text = tk.StringVar()
+func5_btn = tk.Button(main, textvariable=func5_text)
+func5_text.set('Button 5')
+func5_btn.grid(column=1, row=5)
+
+# func6_text = tk.StringVar()
+# func6_btn = tk.Button(root, textvariable=func6_text, command=lambda:test('empty'))
+# func6_text.set('func 6')
+# func6_btn.grid(column=6, row=0)
+
+# func7_text = tk.StringVar()
+# func7_btn = tk.Button(root, textvariable=func7_text, command=lambda:test('empty'))
+# func7_text.set('func 7')
+# func7_btn.grid(column=6, row=1)
+
+# func8_text = tk.StringVar()
+# func8_btn = tk.Button(root, textvariable=func8_text, command=lambda:test('empty'))
+# func8_text.set('func 8')
+# func8_btn.grid(column=6, row=2)
+
+# func9_text = tk.StringVar()
+# func9_btn = tk.Button(root, textvariable=func9_text, command=lambda:test('empty'))
+# func9_text.set('func 9')
+# func9_btn.grid(column=6, row=3)
+
+# func10_text = tk.StringVar()
+# func10_btn = tk.Button(root, textvariable=func10_text, command=lambda:test('empty'))
+# func10_text.set('func 10')
+# func10_btn.grid(column=6, row=4)
+
+# func11_text = tk.StringVar()
+# func11_btn = tk.Button(root, textvariable=func11_text, command=lambda:test('empty'))
+# func11_text.set('func 11')
+# func11_btn.grid(column=6, row=5)
+
+# finish
+main.mainloop()

@@ -3,59 +3,65 @@ from tkinter import filedialog
 import tkinter as tk
 import platform
 
-def get_source():
-   global SOURCE
-   global source_name
+def load(window):
 
-   SOURCE = filedialog.askdirectory()
-   source_name.set(SOURCE)
+   def get_source():
+      global SOURCE
+      global source_name
 
-def get_destination():
-   global PROJECT
-   global destination_name
+      SOURCE = filedialog.askdirectory()
+      source_name.set(SOURCE)
 
-   PROJECT = filedialog.askdirectory()
-   destination_name.set(PROJECT)
+   def get_destination():
+      global PROJECT
+      global destination_name
 
-def get_yolo():
-   global YOLO
-   global yolo_name
+      PROJECT = filedialog.askdirectory()
+      destination_name.set(PROJECT)
 
-   YOLO = filedialog.askdirectory()
-   yolo_name.set(YOLO)
+   def get_yolo():
+      global YOLO
+      global yolo_name
 
-def close():
-   global close_name
-   counter = 0
+      YOLO = filedialog.askdirectory()
+      yolo_name.set(YOLO)
 
-   try:
-      if SOURCE:
-         counter += 1
-   except NameError:
-      close_name.set('Source directory not found')
-      return 
+   def close():
+      global close_name
+      counter = 0
 
-   try:
-      if PROJECT:
-         counter += 1
-   except NameError:
-      close_name.set('Destination directory not found')
-      return
+      try:
+         if SOURCE:
+            counter += 1
+      except NameError:
+         close_name.set('Source directory not found')
+         return 
 
-   try:
-      if YOLO:
-         counter += 1
-   except NameError:
-      close_name.set('YOLO directory not found')
-      return
+      try:
+         if PROJECT:
+            counter += 1
+      except NameError:
+         close_name.set('Destination directory not found')
+         return
 
-   if SOURCE == PROJECT:
-      close_name.set('Source and destination directories cannot be the same!')
-   else:
-      if counter == 3:
-         win.destroy()
+      try:
+         if YOLO:
+            counter += 1
+      except NameError:
+         close_name.set('YOLO directory not found')
+         return
 
-def load():
+      if SOURCE == PROJECT:
+         close_name.set('Source and destination directories cannot be the same!')
+      else:
+         if counter == 3:
+            # win.destroy()
+            win.quit()
+            
+            win.update()
+
+
+
    global source_name
    global destination_name
    global yolo_name
@@ -63,7 +69,7 @@ def load():
    global win
    global close_btn
 
-   win = tk.Tk()
+   win = tk.Toplevel(window)
    win.title('Load Directories')
    if platform.system() == 'Windows' :
       win.geometry("700x650")
@@ -110,10 +116,11 @@ def load():
    l4 = tk.Label(master=win,textvariable=close_name, height=5, width=100)
    l4.grid(column=0, row=7)
 
-
+   print('load finished')
    #win.destroy()
    win.mainloop()
 
+
+   win.destroy()
    return SOURCE, PROJECT, YOLO
 
-load()
