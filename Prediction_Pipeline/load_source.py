@@ -3,9 +3,51 @@ from tkinter import filedialog
 import tkinter as tk
 import platform
 
+<<<<<<< Updated upstream
 def get_source():
    global SOURCE
    global source_name
+=======
+def load(window):
+
+   def get_source():
+      global SOURCE
+      global source_name
+      win.attributes('-topmost', False)
+      SOURCE = filedialog.askdirectory()
+      source_name.set(SOURCE)
+      win.lift()
+      win.update()
+
+   def get_destination():
+      global PROJECT
+      global destination_name
+      win.attributes('-topmost', False)
+      PROJECT = filedialog.askdirectory()
+      destination_name.set(PROJECT)
+      win.lift()
+      win.update()
+
+   def get_yolo():
+      global YOLO
+      global yolo_name
+      win.attributes('-topmost', False)
+      YOLO = filedialog.askdirectory()
+      yolo_name.set(YOLO)
+      win.lift()
+      win.update()
+
+   def close():
+      global close_name
+      counter = 0
+
+      try:
+         if SOURCE:
+            counter += 1
+      except NameError:
+         close_name.set('Source directory not found')
+         return 
+>>>>>>> Stashed changes
 
    SOURCE = filedialog.askdirectory()
    source_name.set(SOURCE)
@@ -112,6 +154,10 @@ def load():
 
 
    #win.destroy()
+   #win.lift()
+   #win.call('wm', 'attributes', '.', '-topmost', True)
+   win.attributes('-topmost', True)
+   
    win.mainloop()
 
    return SOURCE, PROJECT, YOLO
