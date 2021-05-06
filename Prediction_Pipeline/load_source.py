@@ -1,6 +1,7 @@
 #from main import SOURCE
 from tkinter import filedialog
 import tkinter as tk
+import platform
 
 
 def get_source():
@@ -30,7 +31,11 @@ def load():
    global close_btn
 
    win = tk.Tk()
-   win.geometry("700x400")
+   if platform.system() == 'Windows' :
+      win.geometry("700x500")
+   if platform.system() == 'Darwin':
+      win.geometry("900x500")
+   win.resizable(False, False)
 
    source_text = tk.StringVar()
    source_btn = tk.Button(win, textvariable=source_text, command=get_source, height=5, width=50)
@@ -62,4 +67,4 @@ def load():
 
    return SOURCE, PROJECT
 
-
+load()
