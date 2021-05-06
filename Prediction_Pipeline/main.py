@@ -12,22 +12,18 @@ from crop_images import crop_images
 import subprocess
 
 # Clone Repository if yolov5 not already in the root folder
-"""CHECK YOLO"""
-clone_yolo()
+
 
 original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
 
-SOURCE, PROJECT = load()
+SOURCE, PROJECT, YOLO = load()
 
-if SOURCE == PROJECT:
-    print('Source folder cannot be the same as destination folder!')
-    SOURCE, PROJECT = load()
-#SOURCE = load_folder('Load Data Source')
+"""CHECK YOLO"""
+YOLO = clone_yolo(YOLO)
+
 WEIGHTS = original_path + '/best.pt'
-#PROJECT = load_folder('Load Project Folder')
-
 PROJECT = PROJECT + '/' + date + '/'
 NAME = 'predictions_' + time
 
@@ -55,7 +51,10 @@ print(f'Source location is: {SOURCE}')
 print(f'{source_count} images found in source folder.\n')
 
 """PREDICT"""
-os.chdir('yolov5')
+os.chdir(YOLO)
+
+print(YOLO)
+
 os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5')
 
 # subprocess = subprocess.Popen(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.5', shell=True, stdout=subprocess.PIPE)
