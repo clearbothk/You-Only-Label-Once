@@ -61,14 +61,12 @@ def load():
    global close_btn
 
    win = tk.Tk()
-
    win.title('Load Directories')
    if platform.system() == 'Windows' :
       win.geometry("700x650")
    if platform.system() == 'Darwin':
       win.geometry("900x750")
    win.resizable(False, False)
-
 
    source_text = tk.StringVar()
    source_btn = tk.Button(win, textvariable=source_text, command=get_source, height=5, width=50)
@@ -101,7 +99,6 @@ def load():
    l3.grid(column=0, row=5)
 
    close_text = tk.StringVar()
-    
    close_btn = tk.Button(win, textvariable=close_text, command=close, height=3, width=50)
    close_text.set('Begin YOLO Labelling')
    close_btn.grid(column=0, row=6)
@@ -115,3 +112,5 @@ def load():
    win.mainloop()
 
    return SOURCE, PROJECT, YOLO
+
+#load()
