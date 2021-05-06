@@ -64,9 +64,7 @@ def step1():
 
     """PREDICT"""
     os.chdir(YOLO)
-
     os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.6 --line-thickness 1')
-
 
     os.chdir(PROJECT + NAME)
     
@@ -79,13 +77,11 @@ def step1():
         if file[-4:] == '.jpg':
             shutil.move(file, 'bounded_images')
 
-
     # Create a popup to tell user that Step 2 ready
 
 def step2():
     """TKINTER"""
     path = PROJECT + NAME
-
     correct_check(path, main)
 
     """CROP IMAGES"""
@@ -121,13 +117,13 @@ def step4():
 
 main = tk.Tk()
 print('here 2')
-
 main.geometry('700x800')
 main.title('Main GUI')
 
 ico = Image.open('clearbot.png')
 photo = ImageTk.PhotoImage(ico)
 main.wm_iconphoto(False, photo)
+
 
 # KeyBinding Controls
 # root.bind("<Key>", handle_keypress)
@@ -143,7 +139,6 @@ main.wm_iconphoto(False, photo)
 
 # Setting Canvas
 canvas_main = tk.Canvas(main, width=700, height=750)
-
 canvas_main.grid(columnspan=2, rowspan=6)
 
 # Instructions
@@ -209,7 +204,6 @@ func5_title = tk.Label(main,
                         height=6,
                         font=('Calibri', 12))
 func5_title.grid(column=0, row=5)
-=======
 
 # func6_title = tk.Label(root, text='None')
 # func6_title.grid(column=0, row=6)
