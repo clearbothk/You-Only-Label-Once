@@ -49,8 +49,11 @@ def close():
       close_name.set('YOLO directory not found')
       return
 
-   if counter == 3:
-      win.destroy()
+   if SOURCE == PROJECT:
+      close_name.set('Source and destination directories cannot be the same!')
+   else:
+      if counter == 3:
+         win.destroy()
 
 def load():
    global source_name
@@ -113,4 +116,4 @@ def load():
 
    return SOURCE, PROJECT, YOLO
 
-#load()
+load()
