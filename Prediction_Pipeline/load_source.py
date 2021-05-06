@@ -3,15 +3,7 @@ from tkinter import filedialog
 import tkinter as tk
 import platform
 
-<<<<<<< Updated upstream
-
-def get_source():
-
-   global SOURCE
-   global source_name
-=======
 def load(window):
->>>>>>> Stashed changes
 
    def get_source():
       global SOURCE
@@ -20,17 +12,6 @@ def load(window):
       SOURCE = filedialog.askdirectory()
       source_name.set(SOURCE)
 
-<<<<<<< Updated upstream
-   PROJECT = filedialog.askdirectory()
-   destination_name.set(PROJECT)
-   close_btn['state'] = 'normal'
-
-def close():
-
-   win.destroy()
-
-def load():
-=======
    def get_destination():
       global PROJECT
       global destination_name
@@ -81,22 +62,19 @@ def load():
 
 
 
->>>>>>> Stashed changes
    global source_name
    global destination_name
+   global yolo_name
+   global close_name
    global win
    global close_btn
 
-<<<<<<< Updated upstream
-   win = tk.Tk()
-=======
    win = tk.Toplevel(window)
    win.title('Load Directories')
->>>>>>> Stashed changes
    if platform.system() == 'Windows' :
-      win.geometry("700x500")
+      win.geometry("700x650")
    if platform.system() == 'Darwin':
-      win.geometry("900x500")
+      win.geometry("900x750")
    win.resizable(False, False)
 
    source_text = tk.StringVar()
@@ -105,6 +83,7 @@ def load():
    source_btn.grid(column=0, row=0)
 
    source_name = tk.StringVar()
+   source_name.set('Select source folder where input images are saved')
    l1 = tk.Label(master=win,textvariable=source_name, height=5, width=100)
    l1.grid(column=0, row=1)
 
@@ -114,24 +93,34 @@ def load():
    destination_btn.grid(column=0, row=2)
 
    destination_name = tk.StringVar()
+   destination_name.set('Select root project folder')
    l2 = tk.Label(master=win,textvariable=destination_name, height=5, width=100)
    l2.grid(column=0, row=3)
 
+   yolo_text = tk.StringVar()
+   yolo_btn = tk.Button(win, textvariable=yolo_text, command=get_yolo, height=5, width=50)
+   yolo_text.set('Open YOLO Directory')
+   yolo_btn.grid(column=0, row=4)
+
+   yolo_name = tk.StringVar()
+   yolo_name.set('Select where YOLOv5 folder will be or is installed')
+   l3 = tk.Label(master=win,textvariable=yolo_name, height=5, width=100)
+   l3.grid(column=0, row=5)
 
    close_text = tk.StringVar()
-   close_btn = tk.Button(win, textvariable=close_text, command=close, height=3, width=50, state='disabled')
+   close_btn = tk.Button(win, textvariable=close_text, command=close, height=3, width=50)
    close_text.set('Begin YOLO Labelling')
-   close_btn.grid(column=0, row=4)
+   close_btn.grid(column=0, row=6)
+
+   close_name = tk.StringVar()
+   l4 = tk.Label(master=win,textvariable=close_name, height=5, width=100)
+   l4.grid(column=0, row=7)
 
    print('load finished')
    #win.destroy()
    win.mainloop()
 
-<<<<<<< Updated upstream
-   return SOURCE, PROJECT
-=======
 
    win.destroy()
    return SOURCE, PROJECT, YOLO
->>>>>>> Stashed changes
 
