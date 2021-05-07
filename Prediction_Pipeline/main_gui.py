@@ -45,12 +45,15 @@ def step1():
         pass
 
     # Copy source images into date folder
-    if 'images' not in os.listdir(PROJECT):
+    if 'images' and 'fullsize_images' not in os.listdir(PROJECT):
         print('Copying images...\n')
     else:
-        if os.path.exists(PROJECT + 'images'):
-            shutil.rmtree(PROJECT + 'images')
-            shutil.rmtree(PROJECT + 'fullsize_images')
+        if os.path.exists(PROJECT + 'images') or os.path.exists(PROJECT + 'fullsize_images'):
+            try:
+                shutil.rmtree(PROJECT + 'images')
+                shutil.rmtree(PROJECT + 'fullsize_images')
+            except FileNotFoundError:
+                pass
 
     shutil.copytree(SOURCE, PROJECT + 'fullsize_images')
     shutil.copytree(SOURCE, PROJECT + 'images')
@@ -78,6 +81,22 @@ def step1():
             shutil.move(file, 'bounded_images')
 
     # Create a popup to tell user that Step 2 ready
+    mini_close = tk.Toplevel()
+    mini_close.geometry('150x100')
+    
+
+    step1_name = tk.StringVar()
+    step1_name.set('Step 1 Complete!')
+    s1 = tk.Label(master=mini_close,textvariable=step1_name, font=('Calibri', 15))
+    s1.grid(column=0, row=0)
+
+    step1_close = tk.StringVar()
+    step1_btn = tk.Button(mini_close, textvariable=step1_close, command=mini_close.destroy, height=2, width=10)
+    step1_close.set('Close Window')
+    step1_btn.grid(column=0, row=1)
+
+    mini_close.mainloop()
+
 
 def step2():
     """TKINTER"""
