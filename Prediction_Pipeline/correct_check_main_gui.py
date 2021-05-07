@@ -231,6 +231,10 @@ def correct_check(pathpath_in, window):
                 shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Remove/labels/{file_name[:-4]}.txt')
             except FileNotFoundError:
                 print(f'Label for {file_name} not found!')
+        root.update()
+        root.quit()
+        root.destroy()
+
 
     # Keybind Functions
 
@@ -287,7 +291,7 @@ def correct_check(pathpath_in, window):
 
     func0_text = tk.StringVar()
     func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:copy_files())
-    func0_text.set('Copy Files')
+    func0_text.set('Copy Files and Quit')
     func0_btn.grid(column=5, row=5)
 
 
@@ -347,9 +351,9 @@ def correct_check(pathpath_in, window):
     remove_btn.grid(column=3, row=6)
 
     open_file()
-    # finish
-    root.mainloop()
 
+    root.mainloop()
+    
 #Coded by A.Lam with reference to J.Lee
 
 
