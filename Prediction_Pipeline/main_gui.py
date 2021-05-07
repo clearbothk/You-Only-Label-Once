@@ -46,12 +46,15 @@ def step1():
         pass
 
     # Copy source images into date folder
-    if 'images' not in os.listdir(PROJECT):
+    if 'images' and 'fullsize_images' not in os.listdir(PROJECT):
         print('Copying images...\n')
     else:
-        if os.path.exists(PROJECT + 'images'):
-            shutil.rmtree(PROJECT + 'images')
-            shutil.rmtree(PROJECT + 'fullsize_images')
+        if os.path.exists(PROJECT + 'images') or os.path.exists(PROJECT + 'fullsize_images'):
+            try:
+                shutil.rmtree(PROJECT + 'images')
+                shutil.rmtree(PROJECT + 'fullsize_images')
+            except FileNotFoundError:
+                pass
 
     shutil.copytree(SOURCE, PROJECT + 'fullsize_images')
     shutil.copytree(SOURCE, PROJECT + 'images')
@@ -83,8 +86,7 @@ def step1():
     func1_btn['state'] = 'disable'
 
     # Create a popup to tell user that Step 2 ready
-<<<<<<< Updated upstream
-=======
+
     # mini_close = tk.Toplevel()
     # mini_close.geometry('150x100')
     
@@ -100,8 +102,6 @@ def step1():
     # step1_btn.grid(column=0, row=1)
 
     # mini_close.mainloop()
-
->>>>>>> Stashed changes
 
 def step2():
     """TKINTER"""
@@ -143,6 +143,10 @@ main = tk.Tk()
 print('here 2')
 main.geometry('700x800')
 main.title('Main GUI')
+
+ico = Image.open('clearbot.png')
+photo = ImageTk.PhotoImage(ico)
+main.wm_iconphoto(False, photo)
 
 
 # KeyBinding Controls
