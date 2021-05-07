@@ -5,6 +5,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
+#Not needed as main_gui runs this function and the variables are there
+# from datetime import date, datetime
+# date = str(date.today())
+# time = datetime.now().strftime("%H_%M")
 
 def read_stats(path):
     import json
@@ -21,10 +25,10 @@ def read_stats(path):
             dict_ = json.load(infile)
             result.append(dict_)
     os.chdir(path)
-    with open("./mergedjson/merged_file.json", "w") as outfile:
+    with open(f"./mergedjson/{date}_{time}_merged_file.json", "w") as outfile:
         json.dump(result, outfile)
 
-    with open('./mergedjson/merged_file.json') as f:
+    with open(f"./mergedjson/{date}_{time}_merged_file.json") as f:
         data = json.load(f)
 
         
@@ -38,7 +42,7 @@ def read_stats(path):
                 d.setdefault(key, []).append(value)
 
     df = pd.DataFrame(d, index=index)
-    df.to_csv('Object Materials/stats.csv')
+    df.to_csv(f'Object Materials/{date}_{time}_stats.csv')
 
 
     sns.barplot(data=df, color="blue")
