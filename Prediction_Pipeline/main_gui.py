@@ -16,6 +16,7 @@ from convert_images import convert, rename
 from correct_check_main_gui import correct_check
 from crop_images import crop_images
 from filter_app_main_gui import filter_app
+from read_stats import read_stats
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -80,23 +81,27 @@ def step1():
         if file[-4:] == '.jpg':
             shutil.move(file, 'bounded_images')
 
+    # disable and set button text to 'Done' to indicate loading files and prediction has been completed
+    func1_text.set('Done')
+    func1_btn['state'] = 'disable'
+
     # Create a popup to tell user that Step 2 ready
-    mini_close = tk.Toplevel()
-    mini_close.geometry('150x100')
+
+    # mini_close = tk.Toplevel()
+    # mini_close.geometry('150x100')
     
 
-    step1_name = tk.StringVar()
-    step1_name.set('Step 1 Complete!')
-    s1 = tk.Label(master=mini_close,textvariable=step1_name, font=('Calibri', 15))
-    s1.grid(column=0, row=0)
+    # step1_name = tk.StringVar()
+    # step1_name.set('Step 1 Complete!')
+    # s1 = tk.Label(master=mini_close,textvariable=step1_name, font=('Calibri', 15))
+    # s1.grid(column=0, row=0)
 
-    step1_close = tk.StringVar()
-    step1_btn = tk.Button(mini_close, textvariable=step1_close, command=mini_close.destroy, height=2, width=10)
-    step1_close.set('Close Window')
-    step1_btn.grid(column=0, row=1)
+    # step1_close = tk.StringVar()
+    # step1_btn = tk.Button(mini_close, textvariable=step1_close, command=mini_close.destroy, height=2, width=10)
+    # step1_close.set('Close Window')
+    # step1_btn.grid(column=0, row=1)
 
-    mini_close.mainloop()
-
+    # mini_close.mainloop()
 
 def step2():
     """TKINTER"""
@@ -130,7 +135,7 @@ def step3():
     filter_app(path + '/Correct/cropped', main)
 
 def step4():
-    pass
+    read_stats(PROJECT + NAME)
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -245,7 +250,7 @@ func3_text.set('Step 3')
 func3_btn.grid(column=1, row=3)
 
 func4_text = tk.StringVar()
-func4_btn = tk.Button(main, textvariable=func4_text, height=4, width=30, borderwidth=5)
+func4_btn = tk.Button(main, textvariable=func4_text, command=step4, height=4, width=30, borderwidth=5)
 func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
 
