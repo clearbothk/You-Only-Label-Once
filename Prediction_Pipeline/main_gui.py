@@ -230,7 +230,7 @@ func5_title = tk.Label(main,
 func5_title.grid(column=0, row=5)
 
 # func6_title = tk.Label(root, text='None')
-# func6_title.grid(column=0, row=6)
+# func6_title.grid(column=0, row=6) 
 
 # Function buttons
 
