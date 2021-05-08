@@ -10,7 +10,7 @@ import os
 # date = str(date.today())
 # time = datetime.now().strftime("%H_%M")
 
-def read_stats(path):
+def read_stats(path, date, time):
     import json
     os.chdir(path)
     os.makedirs("./mergedjson",exist_ok=True)

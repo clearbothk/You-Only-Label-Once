@@ -135,7 +135,7 @@ def step3():
     filter_app(path + '/Correct/cropped', main)
 
 def step4():
-    read_stats(PROJECT + NAME)
+    read_stats(PROJECT + NAME, date, time)
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
