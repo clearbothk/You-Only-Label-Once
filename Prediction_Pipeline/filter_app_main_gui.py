@@ -50,7 +50,9 @@ def filter_app(pathpath_in,window):
 
     object_list = ['bottle', 'can', 'cup', 'box_drink', 'face_mask', 'plastic_bag', 'utensils']
     object_class = '_______'
-
+    stats_dict = {}
+    for i in object_list:
+        stats_dict[i] = material_dict
     # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
     # Read all folders in the selected Directory
@@ -286,12 +288,14 @@ def filter_app(pathpath_in,window):
                     save_dict()
                     count_class()
                     next_image()
+                    copy_files()
                     return
                 else:
                     fileclass_text['text'] = 'Not Yet Classified'
             save_dict()
             count_class()
             next_image()
+            copy_files()
         except NameError:
             pass
 
@@ -308,6 +312,7 @@ def filter_app(pathpath_in,window):
             print(f'All {object_class}(s) have been classified as {material}')
             save_dict()
             count_class()
+            copy_files()
         except NameError:
             pass
 
@@ -393,9 +398,15 @@ def filter_app(pathpath_in,window):
             global material_dict
             # create folder to hold all classified object materials
             os.makedirs((f'{prediction_folder}/Object Materials'), exist_ok=True)
-
-            stats_dict[object_class] = material_dict
+            try:
+                with open(f'{prediction_folder}/Object Materials/stats.json', 'r') as f:
+                    stats_dict = json.load(f)
+                print('stats.json loaded')
+            except:
+                print("No stats.json")
             
+            stats_dict[object_class] = material_dict
+            print(stats_dict)
             # create and update stats dict
             with open(f'{prediction_folder}/Object Materials/stats.json', 'w') as f:
                 json.dump(stats_dict,f)
@@ -455,9 +466,9 @@ def filter_app(pathpath_in,window):
         elif event.char == "o":
             print("o pressed")    
             open_directory()
-        elif event.char == "c":
-            print("c pressed")    
-            copy_files()
+        # elif event.char == "c":
+        #     print("c pressed")    
+        #     copy_files()
 
     def left(event):
         print("< pressed")    
@@ -620,10 +631,10 @@ def filter_app(pathpath_in,window):
     func4_text.set('Prev - (<)')
     func4_btn.grid(column=5, row=4)
 
-    func5_text = tk.StringVar()
-    func5_btn = tk.Button(root, textvariable=func5_text, command=lambda:copy_files(), height = 8)
-    func5_text.set('Finished (C)')
-    func5_btn.grid(column=5, row=5)
+    # func5_text = tk.StringVar()
+    # func5_btn = tk.Button(root, textvariable=func5_text, command=lambda:copy_files(), height = 8)
+    # func5_text.set('Finished (C)')
+    # func5_btn.grid(column=5, row=5)
 
     # func6_text = tk.StringVar()
     # func6_btn = tk.Button(root, textvariable=func6_text, command=lambda:test('empty'))

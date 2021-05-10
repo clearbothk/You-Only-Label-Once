@@ -17,13 +17,13 @@ from correct_check_2 import correct_check
 from crop_images import crop_images
 from filter_app_main_gui import filter_app
 from read_stats import read_stats
+from step5_combine_stats import combine_stats
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
-print('here 1')
 # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 
@@ -135,10 +135,12 @@ def step3():
 def step4():
     read_stats(PROJECT + NAME,date,time)
 
+def step5():
+    combine_stats(PROJECT, date)
+
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 main = tk.Tk()
-print('here 2')
 main.geometry('700x800')
 main.title('Main GUI')
 
@@ -218,7 +220,8 @@ Display statistics for current batch of images''',
 func4_title.grid(column=0, row=4)
 
 func5_title = tk.Label(main, 
-                        text='''Step 5.
+                        text=f'''Step 5.
+Show {date} Stats
 ''', 
                         justify='left',
                         anchor=W,
@@ -253,7 +256,7 @@ func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
 
 func5_text = tk.StringVar()
-func5_btn = tk.Button(main, textvariable=func5_text, height=4, width=30, borderwidth=5)
+func5_btn = tk.Button(main, textvariable=func5_text, command=step5, height=4, width=30, borderwidth=5)
 func5_text.set('Step 5')
 func5_btn.grid(column=1, row=5)
 
