@@ -13,7 +13,7 @@ from datetime import date, datetime
 
 from yolo_check import clone_yolo
 from convert_images import convert, rename
-from correct_check_2 import correct_check
+from relabel_correct_check_2 import correct_check
 from crop_images import crop_images
 from filter_app_main_gui import filter_app
 
@@ -26,44 +26,55 @@ time = datetime.now().strftime("%H_%M")
 # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 def step1():
-    from load_source import load
-    global SOURCE, PROJECT, YOLO, NAME
-    SOURCE, PROJECT, YOLO = load(main)
-    print(SOURCE, PROJECT, YOLO)
+    global ic_images, ic_labels, c_relabel, ic_path
+    # from load_source import load
+    # global SOURCE, PROJECT, YOLO, NAME
+    # SOURCE, PROJECT, YOLO = load(main)
+    # print(SOURCE, PROJECT, YOLO)
+    ic_path = filedialog.askdirectory()
+    print(ic_path)
+    ic_images = f'{ic_path}/images'
+    ic_labels = f'{ic_path}/labels'
 
+    os.chdir(ic_path)
+    os.chdir('..')
+    c_relabel = os.getcwd()
+    os.makedirs("./relabel_Correct/",exist_ok=True)
+    os.makedirs("./relabel_Correct/images",exist_ok=True)
+    os.makedirs("./relabel_Correct/labels",exist_ok=True)
+    os.makedirs("./relabel_Incorrect/",exist_ok=True)
+    os.makedirs("./relabel_Incorrect/images",exist_ok=True)
+    os.makedirs("./relabel_Incorrect/labels",exist_ok=True)
+    os.makedirs("./relabel_Remove/",exist_ok=True)
+    os.makedirs("./relabel_Remove/images",exist_ok=True)
+    os.makedirs("./relabel_Remove/labels",exist_ok=True)
     # disable and set button text to 'Done' to indicate loading files and prediction has been completed
-    func1_text.set('Done')
-    func1_btn['state'] = 'disable'
+    # func1_text.set('Done')
+    # func1_btn['state'] = 'disable'
 
 def step2():
     """TKINTER"""
-    correct_check(PROJECT, NAME, main)
+    correct_check(ic_images, ic_labels, main)
 
     """CROP IMAGES"""
     with open(original_path + '/item_classes.json') as f:
         item_class_dict = json.load(f)
 
-    os.chdir('..')
-    os.chdir(os.getcwd() + '/' + NAME + '/Correct')
-    os.mkdir('cropped')
-
-    path = os.getcwd()
-
-    labels_path = glob.glob(path + '/labels/*.txt')
-    image_path = glob.glob(path + '/images/*.jpg')
+    labels_path = glob.glob(ic_path + '/labels/*.txt')
+    image_path = glob.glob(ic_path + '/images/*.jpg')
     #files = [i.split('/')[-1][:-4] for i in labels_path]
     files = [i[-25:-4] for i in labels_path]
 
     for cat in item_class_dict.values():
-        os.mkdir('./cropped/' + cat)
+        os.makedirs(f'{c_relabel}/relabel_Correct/cropped/{cat}', exist_ok=True)
 
-    crop_images(files, path, item_class_dict)
+    crop_images(files, f'{c_relabel}/relabel_Correct', item_class_dict)
 
     # Should have a close button or have copy files automatically close window
 
 def step3():
-    path = PROJECT + NAME
-    filter_app(path + '/Correct/cropped', main)
+    path = f'{c_relabel}/relabel_Correct/cropped'
+    filter_app(path, main)
 
 def step4():
     pass
@@ -73,7 +84,7 @@ def step4():
 main = tk.Tk()
 print('here 2')
 main.geometry('700x800')
-main.title('Main GUI')
+main.title('Relabel GUI')
 
 ico = Image.open('clearbot.png')
 photo = ImageTk.PhotoImage(ico)
@@ -98,14 +109,12 @@ canvas_main.grid(columnspan=2, rowspan=6)
 
 # Instructions
 
-intro = tk.Label(main, text='ClearBot Auto Labeling Program', font=('Calibri', 25))
+intro = tk.Label(main, text='ClearBot Auto ReLabeling Program', font=('Calibri', 25))
 intro.grid(column=0, columnspan=2, row=0)
 
 func1_title = tk.Label(main, 
                         text='''Step 1. 
-Select Input Directory (Source)
-Select Output Directory (Destination)
-Select YOLOv5 Installation Directory (YOLO)''', 
+Select Input Relabeled Images Directory''', 
                         justify='left', 
                         anchor=W, 
                         width=45,
@@ -185,10 +194,10 @@ func4_btn = tk.Button(main, textvariable=func4_text, height=4, width=30, borderw
 func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
 
-func5_text = tk.StringVar()
-func5_btn = tk.Button(main, textvariable=func5_text, height=4, width=30, borderwidth=5)
-func5_text.set('Step 5')
-func5_btn.grid(column=1, row=5)
+# func5_text = tk.StringVar()
+# func5_btn = tk.Button(main, textvariable=func5_text, height=4, width=30, borderwidth=5)
+# func5_text.set('Step 5')
+# func5_btn.grid(column=1, row=5)
 
 # func6_text = tk.StringVar()
 # func6_btn = tk.Button(root, textvariable=func6_text, command=lambda:test('empty'))
