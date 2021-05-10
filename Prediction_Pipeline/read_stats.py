@@ -45,6 +45,3 @@ def read_stats(path):
     plt.xticks(rotation=90)
     plt.tight_layout()
     plt.show()
-
-path = '/Users/jlee/Code-Data/Clearbot_Project/testing/2021-05-07/predictions_15_06'
-read_stats(path)
