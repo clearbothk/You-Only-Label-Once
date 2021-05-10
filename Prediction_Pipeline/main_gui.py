@@ -23,7 +23,6 @@ from read_stats import read_stats
 original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
-print('here 1')
 # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 
