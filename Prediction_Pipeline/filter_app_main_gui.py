@@ -202,6 +202,7 @@ def filter_app(pathpath_in,window):
             number_img['text'] = 'None'
             classified['text'] = 'None'
             print(f'No images in {object_class}')
+        copy_files()
 
     def load_image():
         # load image included in open_file function`
