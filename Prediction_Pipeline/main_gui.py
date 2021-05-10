@@ -135,7 +135,7 @@ def step3():
     filter_app(path + '/Correct/cropped', main)
 
 def step4():
-    read_stats(PROJECT + NAME)
+    read_stats(PROJECT + NAME,date,time)
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -230,7 +230,7 @@ func5_title = tk.Label(main,
 func5_title.grid(column=0, row=5)
 
 # func6_title = tk.Label(root, text='None')
-# func6_title.grid(column=0, row=6)
+# func6_title.grid(column=0, row=6) 
 
 # Function buttons
 

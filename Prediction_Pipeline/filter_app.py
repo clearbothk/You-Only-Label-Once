@@ -101,6 +101,7 @@ def filter_app():
         dir_index = list_dir.index(temp_object)
         print(temp_object)
         open_file_multi(dir_dict[list_dir[dir_index]])
+        copy_files()
 
     def up_menu():
         try:
@@ -198,7 +199,8 @@ def filter_app():
             number_img['text'] = 'None'
             classified['text'] = 'None'
             print(f'No images in {object_class}')
-
+        copy_files()
+        
     def load_image():
         # load image included in open_file function`
         global image
@@ -613,8 +615,8 @@ def filter_app():
     func4_btn.grid(column=5, row=4)
 
     func5_text = tk.StringVar()
-    func5_btn = tk.Button(root, textvariable=func5_text, command=lambda:copy_files())
-    func5_text.set('Copy Files (C)')
+    func5_btn = tk.Button(root, textvariable=func5_text, command=lambda:copy_files(), height = 8)
+    func5_text.set('Finished (C)')
     func5_btn.grid(column=5, row=5)
 
     # func6_text = tk.StringVar()
