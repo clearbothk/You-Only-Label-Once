@@ -32,6 +32,7 @@ def read_stats(date,time):
         data = json.load(f)
     
         
+
     d = {}
 
     for object_ in data:

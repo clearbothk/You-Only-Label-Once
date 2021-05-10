@@ -23,7 +23,6 @@ def combine_stats(date):
     grab_headers[0] = "date"
     df.columns = grab_headers
     df = df.set_index("date") 
-    
 
     #Save CSV to Project Root File
     df.to_csv(f"../{date}.csv")
@@ -34,6 +33,7 @@ def combine_stats(date):
     df_plot = df_all.sum(axis = 0, skipna = True)
     
     plt.rcParams["figure.figsize"] = [12, 15]
+
     df_plot.plot(kind="bar")
     plt.title(f"{date} Stats",fontsize=24);
     plt.ylabel("Count");

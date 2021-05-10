@@ -19,6 +19,7 @@ from relabel_filter_app import filter_app
 from relabel_read_stats import read_stats
 from step5_combine_stats import combine_stats
 
+
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 original_path = os.getcwd()
@@ -29,10 +30,7 @@ time = datetime.now().strftime("%H_%M")
 
 def step1():
     global ic_images, ic_labels, c_relabel, ic_path
-    # from load_source import load
-    # global SOURCE, PROJECT, YOLO, NAME
-    # SOURCE, PROJECT, YOLO = load(main)
-    # print(SOURCE, PROJECT, YOLO)
+
     ic_path = filedialog.askdirectory()
     print(ic_path)
     ic_images = f'{ic_path}/images'
@@ -62,9 +60,8 @@ def step2():
     with open(original_path + '/item_classes.json') as f:
         item_class_dict = json.load(f)
 
-    labels_path = glob.glob(ic_path + '/labels/*.txt')
-    image_path = glob.glob(ic_path + '/images/*.jpg')
-    #files = [i.split('/')[-1][:-4] for i in labels_path]
+    labels_path = glob.glob(f'{c_relabel}/relabel_Correct/labels/*.txt')
+
     files = [i[-25:-4] for i in labels_path]
 
     for cat in item_class_dict.values():
@@ -86,6 +83,7 @@ def step4():
 def step5():
     print(os.getcwd())
     combine_stats(date)
+
 
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
