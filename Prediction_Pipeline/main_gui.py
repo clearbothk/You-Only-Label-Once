@@ -13,7 +13,7 @@ from datetime import date, datetime
 
 from yolo_check import clone_yolo
 from convert_images import convert, rename
-from correct_check_main_gui import correct_check
+from correct_check_2 import correct_check
 from crop_images import crop_images
 from filter_app_main_gui import filter_app
 from read_stats import read_stats
@@ -105,8 +105,7 @@ def step1():
 
 def step2():
     """TKINTER"""
-    path = PROJECT + NAME
-    correct_check(path, main)
+    correct_check(PROJECT, NAME, main)
 
     """CROP IMAGES"""
     with open(original_path + '/item_classes.json') as f:
@@ -131,8 +130,7 @@ def step2():
     # Should have a close button or have copy files automatically close window
 
 def step3():
-    path = PROJECT + NAME
-    filter_app(path + '/Correct/cropped', main)
+    filter_app(f'{PROJECT}{NAME}/Correct/cropped', main)
 
 def step4():
     read_stats(PROJECT + NAME,date,time)

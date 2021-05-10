@@ -37,8 +37,7 @@ def step1():
 
 def step2():
     """TKINTER"""
-    path = PROJECT + NAME
-    correct_check(path, pred_fold, main)
+    correct_check(PROJECT, NAME, main)
 
     """CROP IMAGES"""
     with open(original_path + '/item_classes.json') as f:
