@@ -38,13 +38,11 @@ def correct_check(project, name, window):
         
         image640_path = f'{Project}/images'
         labels_path = f'{Project}{Name}/labels'
-        #print(labels_path)
         
         list_images = sorted(os.listdir(image640_path)) 
         list_images = [i for i in list_images if '.jpg' in i] # names of images into a list
         os.chdir(image640_path)
         folder_path = os.getcwd()
-        print(folder_path)
 
         image_dict = {}
         for i in range(len(list_images)):
@@ -81,12 +79,13 @@ def correct_check(project, name, window):
         image_ori.grid(column=5, columnspan=5, row=1, rowspan=3)
 
 
+
         # finish writing this later need to path to predictions_time/labels folder to pull labels
         # for bounded image
         try:
 
+
             bou_img = img_bound(folder_path, labels_path,  image_dict[current_image].split('.')[0])
-            
             bou_img = Image.fromarray(bou_img)
             b, g, r = bou_img.split()
             bou_img = Image.merge('RGB', (r,g,b))
@@ -161,6 +160,7 @@ def correct_check(project, name, window):
             current_image -= 1
             image_bou.destroy()
             image_ori.destroy()
+
             load_image()
         save_dict()
 
@@ -390,230 +390,3 @@ def correct_check(project, name, window):
 
     root.mainloop()
 #Coded by A.Lam with reference to J.Lee
-
-
-# from tkinter import filedialog
-# from tkinter import *
-# from PIL import ImageTk,Image 
-# import tkinter as tk
-# import os
-# import glob
-# from time import localtime, strftime
-# import shutil
-
-# window = tk.Tk()
-# window.title( 'YOLO Image Reviewer' )
-
-
-# Console = Text(window,width=40, height=8)
-# def write(*message, end = "\n", sep = " "):
-#     text = ""
-#     for item in message:
-#         text += "{}".format(item)
-#         text += sep
-#     text += end
-#     Console.insert(INSERT, text)
-#     Console.yview(tk.END)
-
-# # Create a photoimage object of the image in the path
-# image_list = []
-# bounded_image_name = ""
-# images = iter(image_list)
-# correct_label_list = []
-# incorrect_label_list = []
-# add_to_correct = True
-
-# def next_img():  
-#     try:
-#         img = next(images)  # get the next image from the iterator
-#         img_file_name = img    
-#     except StopIteration:
-#         write("No More Images")
-#         return  # if there are no more images, do nothing
-
-#     # load the image and display it
-#     img = Image.open(img)
-#     basewidth = 300
-#     wpercent = (basewidth/float(img.size[0]))
-#     hsize = int((float(img.size[1])*float(wpercent)))
-#     img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-#     img = ImageTk.PhotoImage(img)
-#     panel.img = img  # keep a reference so it's not garbage collected
-#     panel['image'] = img
-
-#     return img_file_name
-
-# def load_images():
-#     global image_list
-#     global images
-#     global bounded_image_name
-#     glob_test =  os.listdir()
-#     image_list = glob_test
-#     write(f"{len(image_list)} Image Loaded!")
-#     images = iter(image_list)
-#     bounded_image_name = next_img()
-#     return glob_test
-
-# def browse_button_IN():
-#     # Allow user to select a directory and store it in global var
-#     # called folder_path
-#     global folder_path_IN
-#     filename_IN = filedialog.askdirectory(title='Please Select YOLO Prediction Folder')
-#     folder_path_IN.set(filename_IN)
-#     os.chdir(filename_IN+"/bounded_images")
-#     load_images()
-
-
-# def save_output():
-    
-#     time = strftime("%Y%m%d", localtime())
-#     # with open(folder_path_OUT_var+f"/{time}_correct_output.txt", "w") as f:
-#     #     for line in correct_label_list:
-#     #         f.write("%s\n" % line)
-#     # with open(folder_path_OUT_var+f"/{time}_incorrect_output.txt", "w") as f:
-#     #     for line in incorrect_label_list:
-#     #         f.write("%s\n" % line)
-
-#     os.makedirs(folder_path_IN.get()+"/Correct/",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Correct/images",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Correct/labels",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Relabel/",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Relabel/images",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Relabel/labels",exist_ok=True)
-
-#     os.chdir(folder_path_IN.get())
-#     os.chdir("../fullsize_images")
-
-#     for image in correct_label_list:
-#         try:
-#             shutil.copy("./"+image,folder_path_IN.get()+"/Correct/images/"+image )
-#             shutil.copy(folder_path_IN.get()+"/labels/"+image[:-4]+".txt",folder_path_IN.get()+"/Correct/labels/"+image[:-4]+".txt" )
-#         except FileNotFoundError:
-#             print('Label not found!')
-#     for image in incorrect_label_list:
-#         try:
-#             shutil.copy("./"+image,folder_path_IN.get()+"/Relabel/images/"+image )
-#             shutil.copy(folder_path_IN.get()+"/labels/"+image[:-4]+".txt",folder_path_IN.get()+"/Relabel/labels/"+image[:-4]+".txt" )
-#         except FileNotFoundError:
-#             print('Label not found!')
-#     write("Saved")
-
-
-# # greeting = tk.Label(text="YOLO Image Results",
-# #     foreground="black",  # Set the text color to white
-# #     background="white",
-# #     width=50,
-# #     height=5  # Set the background color to black
-# # )
-# # greeting.grid(row=3,column=0)
-
-# def correct():
-#     global bounded_image_name
-#     global add_to_correct
-#     if bounded_image_name:
-#         write("Correct Selected")
-#         correct_label_list.append(bounded_image_name)
-#     bounded_image_name = next_img()
-#     write(f"Correct: {correct_label_list}")
-#     write(f"Incorrect: {incorrect_label_list}")
-#     add_to_correct = True
-
-    
-
-# def incorrect():
-#     global bounded_image_name
-#     global add_to_correct
-#     if bounded_image_name:
-#         write("Incorrect Selected")
-#         incorrect_label_list.append(bounded_image_name)
-#     bounded_image_name = next_img()
-#     write(f"Correct: {correct_label_list}")
-#     write(f"Incorrect: {incorrect_label_list}")
-#     add_to_correct = False
-
-# def swap_list():
-#     global add_to_correct
-#     global correct_label_list
-#     global incorrect_label_list
-#     write("swap")
-#     if add_to_correct == True:
-#         incorrect_label_list.append(correct_label_list.pop())
-#         add_to_correct = False
-#     elif add_to_correct == False:
-#         correct_label_list.append(incorrect_label_list.pop())
-#         add_to_correct = True
-#     write(f"Correct: {correct_label_list}")
-#     write(f"Incorrect: {incorrect_label_list}")
-
-
-
-# buttonCorrect = tk.Button(
-#     text="Correct (C)",
-#     width=25,
-#     height = 4,
-#     bg="white",
-#     fg="black",
-#     command = correct
-# )
-
-# buttonIncorrect = tk.Button(
-#     text="Incorrect (X)",
-#     width=25,
-#     height = 4,
-#     bg="white",
-#     fg="black",
-#     command = incorrect
-# )
-# swapButton = tk.Button(
-#     text="Swap (V)s",
-#     width=25,
-#     height = 4,
-#     bg="white",
-#     fg="black",
-#     command = swap_list
-# )
-
-# def handle_keypress(event):
-#     """Print the character associated to the key pressed"""
-#     if event.char == "x":
-#         print("x pressed")
-#         incorrect()
-#     elif event.char == "c":
-#         print("c pressed")
-#         correct()
-#     elif event.char == "v":
-#         print("v pressed")    
-#         swap_list()
-#     elif event.char == "o":
-#         print("o pressed")    
-#         browse_button_IN()
-#     elif event.char == "s":
-#         print("s pressed")    
-#         save_output()
-
-# # Bind keypress event to handle_keypress()
-# window.bind("<Key>", handle_keypress)
-
-# ## LABELS FOR INPUT OUTPUT
-# folder_path_IN = StringVar()
-# lbl1 = Label(master=window,textvariable=folder_path_IN)
-# prediction_folder = Button(text="Prediction Folder (O)",width=15, command=browse_button_IN)
-# panel = tk.Label(window)
-# # load_images_button = Button(text="Load Images",width=12, command=load_images)
-# button_save = Button(text="Save Output (S)",width=15, command=save_output)
-
-
-# # Placement
-# lbl1.grid(row=0,column=0)
-# prediction_folder.grid(row=0,column=1)
-# # load_images_button.grid(row=1,column=1)
-# button_save.grid(row=2,column=1)
-# buttonCorrect.grid(row=3,column=1)
-# buttonIncorrect.grid(row=4,column=1)
-# swapButton.grid(row=4,column=0)
-# panel.grid(row=5,column=0)
-# Console.grid(row=1,column=0, rowspan=3)
-# # button2 = Button(text="Output",width=10, command=browse_button_OUT)
-# # button2.grid(row=1, column=3)
-
-# window.mainloop()

@@ -16,16 +16,14 @@ from convert_images import convert, rename
 from correct_check_2 import correct_check
 from crop_images import crop_images
 from filter_app_main_gui import filter_app
-from read_stats import read_stats
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
-print('here 1')
-# Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
+# Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 def step1():
     from load_source import load
@@ -33,75 +31,9 @@ def step1():
     SOURCE, PROJECT, YOLO = load(main)
     print(SOURCE, PROJECT, YOLO)
 
-    """CHECK YOLO"""
-    YOLO = clone_yolo(YOLO)
-    WEIGHTS = original_path + '/best.pt'
-    PROJECT = PROJECT + '/' + date + '/'
-    NAME = 'predictions_' + time
-    
-    print('check yolo done')
-    try:
-        os.mkdir(PROJECT)
-    except:
-        pass
-
-    # Copy source images into date folder
-    if 'images' and 'fullsize_images' not in os.listdir(PROJECT):
-        print('Copying images...\n')
-    else:
-        if os.path.exists(PROJECT + 'images') or os.path.exists(PROJECT + 'fullsize_images'):
-            try:
-                shutil.rmtree(PROJECT + 'images')
-                shutil.rmtree(PROJECT + 'fullsize_images')
-            except FileNotFoundError:
-                pass
-
-    shutil.copytree(SOURCE, PROJECT + 'fullsize_images')
-    shutil.copytree(SOURCE, PROJECT + 'images')
-    copied_source = PROJECT + 'images/'
-    rename(PROJECT + 'fullsize_images/', date)
-    convert(copied_source, date)
-
-    source_count = len(os.listdir(SOURCE))
-    print(f'Source location is: {SOURCE}')
-    print(f'{source_count} images found in source folder.\n')
-
-    """PREDICT"""
-    os.chdir(YOLO)
-    os.system(f'python detect.py --source {copied_source} --weights {WEIGHTS} --project {PROJECT} --name {NAME} --save-txt --conf-thres 0.6 --line-thickness 1')
-
-    os.chdir(PROJECT + NAME)
-    
-    # Copy bounded predictions to 'BOUNDED_IMAGES'
-    try:
-        os.mkdir('bounded_images')
-    except:
-        pass
-    for file in os.listdir():
-        if file[-4:] == '.jpg':
-            shutil.move(file, 'bounded_images')
-
     # disable and set button text to 'Done' to indicate loading files and prediction has been completed
     func1_text.set('Done')
     func1_btn['state'] = 'disable'
-
-    # Create a popup to tell user that Step 2 ready
-
-    # mini_close = tk.Toplevel()
-    # mini_close.geometry('150x100')
-    
-
-    # step1_name = tk.StringVar()
-    # step1_name.set('Step 1 Complete!')
-    # s1 = tk.Label(master=mini_close,textvariable=step1_name, font=('Calibri', 15))
-    # s1.grid(column=0, row=0)
-
-    # step1_close = tk.StringVar()
-    # step1_btn = tk.Button(mini_close, textvariable=step1_close, command=mini_close.destroy, height=2, width=10)
-    # step1_close.set('Close Window')
-    # step1_btn.grid(column=0, row=1)
-
-    # mini_close.mainloop()
 
 def step2():
     """TKINTER"""
@@ -130,10 +62,11 @@ def step2():
     # Should have a close button or have copy files automatically close window
 
 def step3():
-    filter_app(f'{PROJECT}{NAME}/Correct/cropped', main)
+    path = PROJECT + NAME
+    filter_app(path + '/Correct/cropped', main)
 
 def step4():
-    read_stats(PROJECT + NAME,date,time)
+    pass
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -228,7 +161,7 @@ func5_title = tk.Label(main,
 func5_title.grid(column=0, row=5)
 
 # func6_title = tk.Label(root, text='None')
-# func6_title.grid(column=0, row=6) 
+# func6_title.grid(column=0, row=6)
 
 # Function buttons
 
@@ -248,7 +181,7 @@ func3_text.set('Step 3')
 func3_btn.grid(column=1, row=3)
 
 func4_text = tk.StringVar()
-func4_btn = tk.Button(main, textvariable=func4_text, command=step4, height=4, width=30, borderwidth=5)
+func4_btn = tk.Button(main, textvariable=func4_text, height=4, width=30, borderwidth=5)
 func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
 
