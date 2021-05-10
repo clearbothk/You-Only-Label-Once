@@ -10,9 +10,10 @@ import os
 # date = str(date.today())
 # time = datetime.now().strftime("%H_%M")
 
-def read_stats(path,date,time):
+def read_stats(path, date, time):
     import json
     os.chdir(path)
+<<<<<<< Updated upstream
     os.makedirs("./mergedjson",exist_ok=True)
     os.chdir(path+'/Object Materials')
     result = []
@@ -32,6 +33,12 @@ def read_stats(path,date,time):
         data = json.load(f)
 
         
+=======
+
+    with open(f"./Object Materials/stats.json") as f:
+        data = json.load(f)
+          
+>>>>>>> Stashed changes
     d = {}
 
     for json in data:
@@ -42,8 +49,12 @@ def read_stats(path,date,time):
                 d.setdefault(key, []).append(value)
 
     df = pd.DataFrame(d, index=index)
+<<<<<<< Updated upstream
     df.to_csv(f'Object Materials/{date}_{time}_stats.csv')
 
+=======
+    df.to_csv(f'Object Materials/stats.csv')
+>>>>>>> Stashed changes
 
     sns.barplot(data=df, color="blue")
     plt.xticks(rotation=90)
