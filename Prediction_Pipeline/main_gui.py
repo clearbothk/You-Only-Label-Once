@@ -138,7 +138,6 @@ def step4():
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 main = tk.Tk()
-print('here 2')
 main.geometry('700x800')
 main.title('Main GUI')
 
