@@ -136,7 +136,7 @@ def step4():
     read_stats(PROJECT + NAME,date,time)
 
 def step5():
-    combine_stats(PROJECT)
+    combine_stats(PROJECT, date)
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -220,8 +220,8 @@ Display statistics for current batch of images''',
 func4_title.grid(column=0, row=4)
 
 func5_title = tk.Label(main, 
-                        text='''Step 5.
-Show All Time Stats
+                        text=f'''Step 5.
+Show {date} Stats
 ''', 
                         justify='left',
                         anchor=W,
