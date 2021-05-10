@@ -8,12 +8,15 @@ from time import localtime, strftime
 import json
 import shutil
 
+def correct_check(project, name, window):
 
-def correct_check(pathpath_in, window):
-    global correct_dict, pathpath
+    from image_bound import img_bound
 
-    # for main_gui functionality
-    pathpath = pathpath_in
+    global correct_dict, Project, Name
+
+    Project = project
+    Name = name
+
     #Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
     correct_dict = {
         "Correct" : [],
@@ -27,17 +30,18 @@ def correct_check(pathpath_in, window):
         global image_dict
         global folder_path
         global current_image
-        global original
-        global base
-
-        # clicking button allows user to select specific directory
-        original = pathpath
-        folder = original + '/bounded_images/'
-        base = original[:-17]
-
-        list_images = sorted(os.listdir(folder)) 
+        global image640
+        global labels_path
+        
+        # project is base folder
+        # name is prediction folder
+        
+        image640_path = f'{Project}/images'
+        labels_path = f'{Project}{Name}/labels'
+        
+        list_images = sorted(os.listdir(image640_path)) 
         list_images = [i for i in list_images if '.jpg' in i] # names of images into a list
-        os.chdir(folder)
+        os.chdir(image640_path)
         folder_path = os.getcwd()
 
         image_dict = {}
@@ -46,7 +50,7 @@ def correct_check(pathpath_in, window):
         print(f'{len(list_images)} images in this folder')
         
         # load material_dict if in folder (continue to work if work has already been done)
-        if 'correct_dict.json' in os.listdir(folder):
+        if 'correct_dict.json' in os.listdir(image640_path):
             load_dict()
             print('Correct list dictionary found.')
         else:
@@ -62,14 +66,40 @@ def correct_check(pathpath_in, window):
         global image
         global current_image 
         global image_path
-        image_path = folder_path + '/' + image_dict[current_image]
+        global image_ori, image_bou
+
+        # for original image
+        image_path = f'{folder_path}/{image_dict[current_image]}'
         image = Image.open(image_path)
         MAX_SIZE = (640, 640)
         image.thumbnail(MAX_SIZE)
-        image = ImageTk.PhotoImage(image)
-        image_label = tk.Label(root, image=image)
-        image_label.image = Image
-        image_label.grid(column=0, columnspan=5, row=1, rowspan=3)
+        image_ = ImageTk.PhotoImage(image)
+        image_ori = tk.Label(root, image=image_)
+        image_ori.image = image_
+        image_ori.grid(column=0, columnspan=5, row=1, rowspan=3)
+
+
+        # finish writing this later need to path to predictions_time/labels folder to pull labels
+        # for bounded image
+        try:
+            bou_img = img_bound(folder_path, labels_path,  image_dict[current_image].split('.')[0])
+
+            bou_img = Image.fromarray(bou_img)
+            b, g, r = bou_img.split()
+            bou_img = Image.merge('RGB', (r,g,b))
+            MAX_SIZE = (640, 640)
+            bou_img.thumbnail(MAX_SIZE)
+            bou_img_ = ImageTk.PhotoImage(bou_img)
+            image_bou = tk.Label(root, image=bou_img_)
+            image_bou.image = bou_img_
+            image_bou.grid(column=5, columnspan=5, row=1, rowspan=3)
+        except:
+            if AttributeError or UnboundLocalError:
+                image_bou = tk.Label(root, image=image_)
+                image_bou.image = image_
+                image_bou.grid(column=5, columnspan=5, row=1, rowspan=3)
+
+            
 
         number['text'] = f'{int(current_image+1)} / {len(list_images)} '
 
@@ -129,12 +159,12 @@ def correct_check(pathpath_in, window):
     # save dictionary
     def save_dict():
         global correct_dict
-        with open((folder_path + '/' + 'correct_dict' + '.json') , 'w') as f:
+        with open(f'{folder_path}/correct_dict.json' , 'w') as f:
             json.dump(correct_dict,f)
 
     def load_dict():
         global correct_dict
-        with open((folder_path + '/' + 'correct_dict' + '.json') , 'r') as f:
+        with open(f'{folder_path}/correct_dict.json' , 'r') as f:
             correct_dict = json.load(f)
 
 
@@ -212,22 +242,22 @@ def correct_check(pathpath_in, window):
         for file in correct_dict["Correct"]:
             try:
                 file_name = file.split("/")[-1]
-                shutil.copy(f'{base}/fullsize_images/{file_name}', f'{original}/Correct/images/{file_name}')
-                shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Correct/labels/{file_name[:-4]}.txt')
+                shutil.copy(f'{Project}/fullsize_images/{file_name}', f'{Project}{Name}/Correct/images/{file_name}')
+                shutil.copy(f'{Project}{Name}/labels/{file_name[:-4]}.txt', f'{Project}{Name}/Correct/labels/{file_name[:-4]}.txt')
             except FileNotFoundError:
                 print(f'Label for {file_name} not found!')
         for file in correct_dict["Incorrect"]:
             try:
                 file_name = file.split("/")[-1]
-                shutil.copy(f'{base}/fullsize_images/{file_name}', f'{original}/Incorrect/images/{file_name}')
-                shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Incorrect/labels/{file_name[:-4]}.txt')
+                shutil.copy(f'{Project}/fullsize_images/{file_name}', f'{Project}{Name}/Incorrect/images/{file_name}')
+                shutil.copy(f'{Project}{Name}/labels/{file_name[:-4]}.txt', f'{Project}{Name}/Incorrect/labels/{file_name[:-4]}.txt')
             except FileNotFoundError:
                 print(f'Label for {file_name} not found!')
         for file in correct_dict["Remove"]:
             try:
                 file_name = file.split("/")[-1]
-                shutil.copy(f'{base}/fullsize_images/{file_name}', f'{original}/Remove/images/{file_name}')
-                shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Remove/labels/{file_name[:-4]}.txt')
+                shutil.copy(f'{Project}/fullsize_images/{file_name}', f'{Project}{Name}/Remove/images/{file_name}')
+                shutil.copy(f'{Project}{Name}/labels/{file_name[:-4]}.txt', f'{Project}{Name}/Remove/labels/{file_name[:-4]}.txt')
             except FileNotFoundError:
                 print(f'Label for {file_name} not found!')
         root.update()
@@ -285,14 +315,13 @@ def correct_check(pathpath_in, window):
     root.bind('<Shift-BackSpace>', wipe_dict)
     root.bind('<Shift-Delete>', wipe_dict)
 
-    canvas = tk.Canvas(root, width=700, height=700)
-    canvas.grid(columnspan=7, rowspan=7)
+    canvas = tk.Canvas(root, width=1400, height=700)
+    canvas.grid(columnspan=12, rowspan=7)
 
     func0_text = tk.StringVar()
     func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:copy_files())
     func0_text.set('Copy Files and Quit')
-    func0_btn.grid(column=5, row=5)
-
+    func0_btn.grid(column=10, row=5)
 
     # func1_text = tk.StringVar()
     # func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_file())
@@ -302,17 +331,17 @@ def correct_check(pathpath_in, window):
     func2_text = tk.StringVar()
     func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_label_class())
     func2_text.set('Delete (del)')
-    func2_btn.grid(column=5, row=2)
+    func2_btn.grid(column=10, row=2)
 
     func3_text = tk.StringVar()
     func3_btn = tk.Button(root, textvariable=func3_text, command=lambda:next_image())
     func3_text.set('Next + (>)')
-    func3_btn.grid(column=5, row=3)
+    func3_btn.grid(column=10, row=3)
 
     func4_text = tk.StringVar()
     func4_btn = tk.Button(root, textvariable=func4_text, command=lambda:prev_image())
     func4_text.set('Prev - (<)')
-    func4_btn.grid(column=5, row=4)
+    func4_btn.grid(column=10, row=4)
 
 
     number = tk.Label(root, text='')
@@ -352,7 +381,6 @@ def correct_check(pathpath_in, window):
     open_file()
 
     root.mainloop()
-    
 #Coded by A.Lam with reference to J.Lee
 
 
