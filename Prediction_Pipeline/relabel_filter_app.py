@@ -397,7 +397,7 @@ def filter_app(pathpath_in,window):
             global stats_dict
             global material_dict
             # create folder to hold all classified object materials
-            os.makedirs((f'{prediction_folder}/relabel_Object Materials'), exist_ok=True)
+            os.makedirs(f'{prediction_folder}/relabel_Object Materials', exist_ok=True)
             try:
                 with open(f'{prediction_folder}/relabel_Object Materials/stats.json', 'r') as f:
                     stats_dict = json.load(f)
