@@ -15,7 +15,7 @@ from yolo_check import clone_yolo
 from convert_images import convert, rename
 from relabel_correct_check_2 import correct_check
 from crop_images import crop_images
-from filter_app_main_gui import filter_app
+from relabel_filter_app import filter_app
 from relabel_read_stats import read_stats
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
