@@ -10,13 +10,29 @@ import os
 # date = str(date.today())
 # time = datetime.now().strftime("%H_%M")
 
-def read_stats(path, date, time):
+def read_stats(date,time):
     import json
-    os.chdir(path)
+    
+    # os.makedirs("./mergedjson",exist_ok=True)
+    # os.chdir(path+'/Object Materials')
+    # result = []
+    # index = []
 
+    # for f in glob.glob("*.json"):
+    #     print(f)
+    #     index.append(f.split(".")[0])
+    #     with open(f, "r") as infile:
+    #         dict_ = json.load(infile)
+    #         result.append(dict_)
+    # os.chdir(path)
+    # with open(f"./mergedjson/{date}_{time}_merged_file.json", "w") as outfile:
+    #     json.dump(result, outfile)
+    print(os.getcwd())
     with open(f"./relabel_Object Materials/stats.json") as f:
         data = json.load(f)
     
+        
+
     d = {}
 
     for object_ in data:
@@ -26,7 +42,7 @@ def read_stats(path, date, time):
             d.setdefault(key, []).append(value)
     index = [f"{date}_{time}"]
     df = pd.DataFrame(d, index=index)
-    df.to_csv(f'relabel_Object Materials/stats.csv')
+    df.to_csv(f'relabel_Object Materials/relabel_obj_materials_stats.csv')
 
     sns.barplot(data=df, color="blue")
     plt.xticks(rotation=90)
