@@ -39,7 +39,6 @@ def correct_check(pathpath_in, window):
         list_images = [i for i in list_images if '.jpg' in i] # names of images into a list
         os.chdir(folder)
         folder_path = os.getcwd()
-        print(folder_path)
 
         image_dict = {}
         for i in range(len(list_images)):
