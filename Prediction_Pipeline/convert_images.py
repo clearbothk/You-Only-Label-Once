@@ -11,14 +11,16 @@ def convert(source, date):
     counter = 1
 
     for pic in tqdm(os.listdir(source)):
-           
-        im = Image.open(source + pic)
-        im.thumbnail(size=(640, 640))
-        im = ImageOps.exif_transpose(im)
-        im = im.convert('RGB')
-        im.save(f"{source}/{date}_image_{counter:04}.jpg")
-        os.remove(source + pic)
-        counter += 1
+        try:   
+            im = Image.open(source + pic)
+            im.thumbnail(size=(640, 640))
+            im = ImageOps.exif_transpose(im)
+            im = im.convert('RGB')
+            im.save(f"{source}/{date}_image_{counter:04}.jpg")
+            os.remove(source + pic)
+            counter += 1
+        except:
+            pass
 
 def rename(source, date):
     print("----------")
@@ -28,10 +30,12 @@ def rename(source, date):
     counter = 1
 
     for pic in tqdm(os.listdir(source)):
-           
-        im = Image.open(source + pic)
-        im = ImageOps.exif_transpose(im)
-        im = im.convert('RGB')
-        im.save(f"{source}/{date}_image_{counter:04}.jpg")
-        os.remove(source + pic)
-        counter += 1
+        try:  
+            im = Image.open(source + pic)
+            im = ImageOps.exif_transpose(im)
+            im = im.convert('RGB')
+            im.save(f"{source}/{date}_image_{counter:04}.jpg")
+            os.remove(source + pic)
+            counter += 1
+        except:
+            pass
