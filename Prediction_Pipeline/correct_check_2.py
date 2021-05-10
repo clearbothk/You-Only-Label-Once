@@ -8,12 +8,15 @@ from time import localtime, strftime
 import json
 import shutil
 
+def correct_check(project, name, window):
 
-def correct_check(pathpath_in, window):
-    global correct_dict, pathpath
+    from image_bound import img_bound
 
-    # for main_gui functionality
-    pathpath = pathpath_in
+    global correct_dict, Project, Name
+
+    Project = project
+    Name = name
+
     #Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
     correct_dict = {
         "Correct" : [],
@@ -27,19 +30,19 @@ def correct_check(pathpath_in, window):
         global image_dict
         global folder_path
         global current_image
-        global original
-        global base
-
-        # clicking button allows user to select specific directory
-        original = pathpath
-        folder = original + '/bounded_images/'
-        base = original[:-17]
-
-        list_images = sorted(os.listdir(folder)) 
+        global image640
+        global labels_path
+        
+        # project is base folder
+        # name is prediction folder
+        
+        image640_path = f'{Project}/images'
+        labels_path = f'{Project}{Name}/labels'
+        
+        list_images = sorted(os.listdir(image640_path)) 
         list_images = [i for i in list_images if '.jpg' in i] # names of images into a list
-        os.chdir(folder)
+        os.chdir(image640_path)
         folder_path = os.getcwd()
-        print(folder_path)
 
         image_dict = {}
         for i in range(len(list_images)):
@@ -47,7 +50,7 @@ def correct_check(pathpath_in, window):
         print(f'{len(list_images)} images in this folder')
         
         # load material_dict if in folder (continue to work if work has already been done)
-        if 'correct_dict.json' in os.listdir(folder):
+        if 'correct_dict.json' in os.listdir(image640_path):
             load_dict()
             print('Correct list dictionary found.')
         else:
@@ -63,14 +66,42 @@ def correct_check(pathpath_in, window):
         global image
         global current_image 
         global image_path
-        image_path = folder_path + '/' + image_dict[current_image]
+        global image_ori, image_bou
+
+        # for original image
+        image_path = f'{folder_path}/{image_dict[current_image]}'
         image = Image.open(image_path)
         MAX_SIZE = (640, 640)
         image.thumbnail(MAX_SIZE)
-        image = ImageTk.PhotoImage(image)
-        image_label = tk.Label(root, image=image)
-        image_label.image = Image
-        image_label.grid(column=0, columnspan=5, row=1, rowspan=3)
+        image_ = ImageTk.PhotoImage(image)
+        image_ori = tk.Label(root, image=image_)
+        image_ori.image = image_
+        image_ori.grid(column=5, columnspan=5, row=1, rowspan=3)
+
+
+
+        # finish writing this later need to path to predictions_time/labels folder to pull labels
+        # for bounded image
+        try:
+
+
+            bou_img = img_bound(folder_path, labels_path,  image_dict[current_image].split('.')[0])
+            bou_img = Image.fromarray(bou_img)
+            b, g, r = bou_img.split()
+            bou_img = Image.merge('RGB', (r,g,b))
+            MAX_SIZE = (640, 640)
+            bou_img.thumbnail(MAX_SIZE)
+            bou_img_ = ImageTk.PhotoImage(bou_img)
+            image_bou = tk.Label(root, image=bou_img_)
+            image_bou.image = bou_img_
+            image_bou.grid(column=0, columnspan=5, row=1, rowspan=3)
+        except:
+            if AttributeError or UnboundLocalError:
+                image_bou = tk.Label(root, image=image_)
+                image_bou.image = image_
+                image_bou.grid(column=5, columnspan=5, row=1, rowspan=3)
+
+            
 
         number['text'] = f'{int(current_image+1)} / {len(list_images)} '
 
@@ -101,7 +132,10 @@ def correct_check(pathpath_in, window):
         global image_path
         if current_image < (len(list_images)-1):
             current_image += 1.0
+            image_ori.destroy()
+            image_bou.destroy()
             load_image()
+            
         save_dict()
 
     def delete_label_class():
@@ -124,18 +158,21 @@ def correct_check(pathpath_in, window):
         global image_path
         if current_image >= 1:
             current_image -= 1
+            image_bou.destroy()
+            image_ori.destroy()
+
             load_image()
         save_dict()
 
     # save dictionary
     def save_dict():
         global correct_dict
-        with open((folder_path + '/' + 'correct_dict' + '.json') , 'w') as f:
+        with open(f'{folder_path}/correct_dict.json' , 'w') as f:
             json.dump(correct_dict,f)
 
     def load_dict():
         global correct_dict
-        with open((folder_path + '/' + 'correct_dict' + '.json') , 'r') as f:
+        with open(f'{folder_path}/correct_dict.json' , 'r') as f:
             correct_dict = json.load(f)
 
 
@@ -197,9 +234,9 @@ def correct_check(pathpath_in, window):
     def copy_files():
         global folder_path
         # print(folder_path)
-        os.chdir(folder_path)
+        os.chdir(Project + Name)
         # os.chdir("..")
-        # print(os.getcwd())
+        print(os.getcwd())
         os.makedirs("./Correct/",exist_ok=True)
         os.makedirs("./Correct/images",exist_ok=True)
         os.makedirs("./Correct/labels",exist_ok=True)
@@ -213,22 +250,22 @@ def correct_check(pathpath_in, window):
         for file in correct_dict["Correct"]:
             try:
                 file_name = file.split("/")[-1]
-                shutil.copy(f'{base}/fullsize_images/{file_name}', f'{original}/Correct/images/{file_name}')
-                shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Correct/labels/{file_name[:-4]}.txt')
+                shutil.copy(f'{Project}/fullsize_images/{file_name}', f'{Project}{Name}/Correct/images/{file_name}')
+                shutil.copy(f'{Project}{Name}/labels/{file_name[:-4]}.txt', f'{Project}{Name}/Correct/labels/{file_name[:-4]}.txt')
             except FileNotFoundError:
                 print(f'Label for {file_name} not found!')
         for file in correct_dict["Incorrect"]:
             try:
                 file_name = file.split("/")[-1]
-                shutil.copy(f'{base}/fullsize_images/{file_name}', f'{original}/Incorrect/images/{file_name}')
-                shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Incorrect/labels/{file_name[:-4]}.txt')
+                shutil.copy(f'{Project}/fullsize_images/{file_name}', f'{Project}{Name}/Incorrect/images/{file_name}')
+                shutil.copy(f'{Project}{Name}/labels/{file_name[:-4]}.txt', f'{Project}{Name}/Incorrect/labels/{file_name[:-4]}.txt')
             except FileNotFoundError:
                 print(f'Label for {file_name} not found!')
         for file in correct_dict["Remove"]:
             try:
                 file_name = file.split("/")[-1]
-                shutil.copy(f'{base}/fullsize_images/{file_name}', f'{original}/Remove/images/{file_name}')
-                shutil.copy(f'{original}/labels/{file_name[:-4]}.txt', f'{original}/Remove/labels/{file_name[:-4]}.txt')
+                shutil.copy(f'{Project}/fullsize_images/{file_name}', f'{Project}{Name}/Remove/images/{file_name}')
+                shutil.copy(f'{Project}{Name}/labels/{file_name[:-4]}.txt', f'{Project}{Name}/Remove/labels/{file_name[:-4]}.txt')
             except FileNotFoundError:
                 print(f'Label for {file_name} not found!')
         root.update()
@@ -286,14 +323,13 @@ def correct_check(pathpath_in, window):
     root.bind('<Shift-BackSpace>', wipe_dict)
     root.bind('<Shift-Delete>', wipe_dict)
 
-    canvas = tk.Canvas(root, width=700, height=700)
-    canvas.grid(columnspan=7, rowspan=7)
+    canvas = tk.Canvas(root, width=1400, height=700)
+    canvas.grid(columnspan=12, rowspan=7)
 
     func0_text = tk.StringVar()
     func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:copy_files())
     func0_text.set('Copy Files and Quit')
-    func0_btn.grid(column=5, row=5)
-
+    func0_btn.grid(column=10, row=5)
 
     # func1_text = tk.StringVar()
     # func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_file())
@@ -303,17 +339,17 @@ def correct_check(pathpath_in, window):
     func2_text = tk.StringVar()
     func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_label_class())
     func2_text.set('Delete (del)')
-    func2_btn.grid(column=5, row=2)
+    func2_btn.grid(column=10, row=2)
 
     func3_text = tk.StringVar()
     func3_btn = tk.Button(root, textvariable=func3_text, command=lambda:next_image())
     func3_text.set('Next + (>)')
-    func3_btn.grid(column=5, row=3)
+    func3_btn.grid(column=10, row=3)
 
     func4_text = tk.StringVar()
     func4_btn = tk.Button(root, textvariable=func4_text, command=lambda:prev_image())
     func4_text.set('Prev - (<)')
-    func4_btn.grid(column=5, row=4)
+    func4_btn.grid(column=10, row=4)
 
 
     number = tk.Label(root, text='')
@@ -353,232 +389,4 @@ def correct_check(pathpath_in, window):
     open_file()
 
     root.mainloop()
-    
 #Coded by A.Lam with reference to J.Lee
-
-
-# from tkinter import filedialog
-# from tkinter import *
-# from PIL import ImageTk,Image 
-# import tkinter as tk
-# import os
-# import glob
-# from time import localtime, strftime
-# import shutil
-
-# window = tk.Tk()
-# window.title( 'YOLO Image Reviewer' )
-
-
-# Console = Text(window,width=40, height=8)
-# def write(*message, end = "\n", sep = " "):
-#     text = ""
-#     for item in message:
-#         text += "{}".format(item)
-#         text += sep
-#     text += end
-#     Console.insert(INSERT, text)
-#     Console.yview(tk.END)
-
-# # Create a photoimage object of the image in the path
-# image_list = []
-# bounded_image_name = ""
-# images = iter(image_list)
-# correct_label_list = []
-# incorrect_label_list = []
-# add_to_correct = True
-
-# def next_img():  
-#     try:
-#         img = next(images)  # get the next image from the iterator
-#         img_file_name = img    
-#     except StopIteration:
-#         write("No More Images")
-#         return  # if there are no more images, do nothing
-
-#     # load the image and display it
-#     img = Image.open(img)
-#     basewidth = 300
-#     wpercent = (basewidth/float(img.size[0]))
-#     hsize = int((float(img.size[1])*float(wpercent)))
-#     img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-#     img = ImageTk.PhotoImage(img)
-#     panel.img = img  # keep a reference so it's not garbage collected
-#     panel['image'] = img
-
-#     return img_file_name
-
-# def load_images():
-#     global image_list
-#     global images
-#     global bounded_image_name
-#     glob_test =  os.listdir()
-#     image_list = glob_test
-#     write(f"{len(image_list)} Image Loaded!")
-#     images = iter(image_list)
-#     bounded_image_name = next_img()
-#     return glob_test
-
-# def browse_button_IN():
-#     # Allow user to select a directory and store it in global var
-#     # called folder_path
-#     global folder_path_IN
-#     filename_IN = filedialog.askdirectory(title='Please Select YOLO Prediction Folder')
-#     folder_path_IN.set(filename_IN)
-#     os.chdir(filename_IN+"/bounded_images")
-#     load_images()
-
-
-# def save_output():
-    
-#     time = strftime("%Y%m%d", localtime())
-#     # with open(folder_path_OUT_var+f"/{time}_correct_output.txt", "w") as f:
-#     #     for line in correct_label_list:
-#     #         f.write("%s\n" % line)
-#     # with open(folder_path_OUT_var+f"/{time}_incorrect_output.txt", "w") as f:
-#     #     for line in incorrect_label_list:
-#     #         f.write("%s\n" % line)
-
-#     os.makedirs(folder_path_IN.get()+"/Correct/",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Correct/images",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Correct/labels",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Relabel/",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Relabel/images",exist_ok=True)
-#     os.makedirs(folder_path_IN.get()+"/Relabel/labels",exist_ok=True)
-
-#     os.chdir(folder_path_IN.get())
-#     os.chdir("../fullsize_images")
-
-#     for image in correct_label_list:
-#         try:
-#             shutil.copy("./"+image,folder_path_IN.get()+"/Correct/images/"+image )
-#             shutil.copy(folder_path_IN.get()+"/labels/"+image[:-4]+".txt",folder_path_IN.get()+"/Correct/labels/"+image[:-4]+".txt" )
-#         except FileNotFoundError:
-#             print('Label not found!')
-#     for image in incorrect_label_list:
-#         try:
-#             shutil.copy("./"+image,folder_path_IN.get()+"/Relabel/images/"+image )
-#             shutil.copy(folder_path_IN.get()+"/labels/"+image[:-4]+".txt",folder_path_IN.get()+"/Relabel/labels/"+image[:-4]+".txt" )
-#         except FileNotFoundError:
-#             print('Label not found!')
-#     write("Saved")
-
-
-# # greeting = tk.Label(text="YOLO Image Results",
-# #     foreground="black",  # Set the text color to white
-# #     background="white",
-# #     width=50,
-# #     height=5  # Set the background color to black
-# # )
-# # greeting.grid(row=3,column=0)
-
-# def correct():
-#     global bounded_image_name
-#     global add_to_correct
-#     if bounded_image_name:
-#         write("Correct Selected")
-#         correct_label_list.append(bounded_image_name)
-#     bounded_image_name = next_img()
-#     write(f"Correct: {correct_label_list}")
-#     write(f"Incorrect: {incorrect_label_list}")
-#     add_to_correct = True
-
-    
-
-# def incorrect():
-#     global bounded_image_name
-#     global add_to_correct
-#     if bounded_image_name:
-#         write("Incorrect Selected")
-#         incorrect_label_list.append(bounded_image_name)
-#     bounded_image_name = next_img()
-#     write(f"Correct: {correct_label_list}")
-#     write(f"Incorrect: {incorrect_label_list}")
-#     add_to_correct = False
-
-# def swap_list():
-#     global add_to_correct
-#     global correct_label_list
-#     global incorrect_label_list
-#     write("swap")
-#     if add_to_correct == True:
-#         incorrect_label_list.append(correct_label_list.pop())
-#         add_to_correct = False
-#     elif add_to_correct == False:
-#         correct_label_list.append(incorrect_label_list.pop())
-#         add_to_correct = True
-#     write(f"Correct: {correct_label_list}")
-#     write(f"Incorrect: {incorrect_label_list}")
-
-
-
-# buttonCorrect = tk.Button(
-#     text="Correct (C)",
-#     width=25,
-#     height = 4,
-#     bg="white",
-#     fg="black",
-#     command = correct
-# )
-
-# buttonIncorrect = tk.Button(
-#     text="Incorrect (X)",
-#     width=25,
-#     height = 4,
-#     bg="white",
-#     fg="black",
-#     command = incorrect
-# )
-# swapButton = tk.Button(
-#     text="Swap (V)s",
-#     width=25,
-#     height = 4,
-#     bg="white",
-#     fg="black",
-#     command = swap_list
-# )
-
-# def handle_keypress(event):
-#     """Print the character associated to the key pressed"""
-#     if event.char == "x":
-#         print("x pressed")
-#         incorrect()
-#     elif event.char == "c":
-#         print("c pressed")
-#         correct()
-#     elif event.char == "v":
-#         print("v pressed")    
-#         swap_list()
-#     elif event.char == "o":
-#         print("o pressed")    
-#         browse_button_IN()
-#     elif event.char == "s":
-#         print("s pressed")    
-#         save_output()
-
-# # Bind keypress event to handle_keypress()
-# window.bind("<Key>", handle_keypress)
-
-# ## LABELS FOR INPUT OUTPUT
-# folder_path_IN = StringVar()
-# lbl1 = Label(master=window,textvariable=folder_path_IN)
-# prediction_folder = Button(text="Prediction Folder (O)",width=15, command=browse_button_IN)
-# panel = tk.Label(window)
-# # load_images_button = Button(text="Load Images",width=12, command=load_images)
-# button_save = Button(text="Save Output (S)",width=15, command=save_output)
-
-
-# # Placement
-# lbl1.grid(row=0,column=0)
-# prediction_folder.grid(row=0,column=1)
-# # load_images_button.grid(row=1,column=1)
-# button_save.grid(row=2,column=1)
-# buttonCorrect.grid(row=3,column=1)
-# buttonIncorrect.grid(row=4,column=1)
-# swapButton.grid(row=4,column=0)
-# panel.grid(row=5,column=0)
-# Console.grid(row=1,column=0, rowspan=3)
-# # button2 = Button(text="Output",width=10, command=browse_button_OUT)
-# # button2.grid(row=1, column=3)
-
-# window.mainloop()
