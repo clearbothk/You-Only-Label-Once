@@ -9,7 +9,7 @@ import json
 import shutil
 
 def correct_check(project, name, window):
-
+    
     from image_bound import img_bound
 
     global correct_dict, Project, Name
@@ -68,10 +68,14 @@ def correct_check(project, name, window):
         global image_path
         global image_ori, image_bou
 
+        #Grab Screen Height and Width
+        screen_width = root.winfo_screenwidth() * 0.4
+        screen_height = root.winfo_screenheight() * 0.4
+        MAX_SIZE = (screen_width, screen_height)
+
         # for original image
         image_path = f'{folder_path}/{image_dict[current_image]}'
         image = Image.open(image_path)
-        MAX_SIZE = (640, 640)
         image.thumbnail(MAX_SIZE)
         image_ = ImageTk.PhotoImage(image)
         image_ori = tk.Label(root, image=image_)
@@ -89,7 +93,6 @@ def correct_check(project, name, window):
             bou_img = Image.fromarray(bou_img)
             b, g, r = bou_img.split()
             bou_img = Image.merge('RGB', (r,g,b))
-            MAX_SIZE = (640, 640)
             bou_img.thumbnail(MAX_SIZE)
             bou_img_ = ImageTk.PhotoImage(bou_img)
             image_bou = tk.Label(root, image=bou_img_)
@@ -97,9 +100,8 @@ def correct_check(project, name, window):
             image_bou.grid(column=0, columnspan=5, row=1, rowspan=3)
         except:
             if AttributeError or UnboundLocalError:
-                image_bou = tk.Label(root, image=image_)
-                image_bou.image = image_
-                image_bou.grid(column=5, columnspan=5, row=1, rowspan=3)
+                image_bou = tk.Label(root, text = "No Bounded Objects Found in this Image")
+                image_bou.grid(column=0, columnspan=5, row=1, rowspan=3)
 
             
 
@@ -312,7 +314,7 @@ def correct_check(project, name, window):
     # start
     root = tk.Toplevel(window)
     root.title("YOLO Image Reviewer")
-
+    root.state('zoomed')
     
     # KeyBinding Controls
 

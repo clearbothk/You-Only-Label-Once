@@ -23,7 +23,6 @@ from read_stats import read_stats
 original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
-print('here 1')
 # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 
@@ -138,7 +137,6 @@ def step4():
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 main = tk.Tk()
-print('here 2')
 main.geometry('700x800')
 main.title('Main GUI')
 
