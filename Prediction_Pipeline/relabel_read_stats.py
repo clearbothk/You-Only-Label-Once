@@ -14,7 +14,7 @@ def read_stats(path, date, time):
     import json
     os.chdir(path)
 
-    with open(f"./Object Materials/stats.json") as f:
+    with open(f"./relabel_Object Materials/stats.json") as f:
         data = json.load(f)
     
     d = {}
@@ -26,7 +26,7 @@ def read_stats(path, date, time):
             d.setdefault(key, []).append(value)
     index = [f"{date}_{time}"]
     df = pd.DataFrame(d, index=index)
-    df.to_csv(f'Object Materials/stats.csv')
+    df.to_csv(f'relabel_Object Materials/stats.csv')
 
     sns.barplot(data=df, color="blue")
     plt.xticks(rotation=90)

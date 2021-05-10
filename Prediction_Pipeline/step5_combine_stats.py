@@ -21,9 +21,6 @@ def combine_stats(path,date):
     df = df.set_index("date") 
     df_plot = df.sum(axis = 0, skipna = True)
 
-
-
-
     plt.rcParams["figure.figsize"] = [15, 20]
     df_plot.plot(kind="bar")
     plt.title(f"{date} Stats",fontsize=24);
