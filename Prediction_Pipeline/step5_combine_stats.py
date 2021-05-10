@@ -7,10 +7,14 @@ import os
 import numpy as np
 
 
-def combine_stats(path,date):
+def combine_stats(date):
     csv_paths = []
-    for f in glob.glob(f"{path}/*.csv"):
+    print(os.getcwd())
+    for f in glob.glob("./Object Materials/*.csv"):
         csv_paths.append(f)
+    for f in glob.glob("./relabel_Object Materials/*.csv"):
+        csv_paths.append(f)
+
     grab_headers = pd.read_csv(csv_paths[0]).columns.tolist()
     df = pd.DataFrame(columns=grab_headers)
     for csv in csv_paths:
@@ -19,12 +23,17 @@ def combine_stats(path,date):
     grab_headers[0] = "date"
     df.columns = grab_headers
     df = df.set_index("date") 
-    df_plot = df.sum(axis = 0, skipna = True)
+    
 
+    #Save CSV to Project Root File
+    df.to_csv(f"../{date}.csv")
 
-
-
-    plt.rcParams["figure.figsize"] = [15, 20]
+    csv_all = glob.glob("../*.csv")
+    df_all = pd.read_csv(csv_all[0])
+    df_all = df_all.set_index('date')
+    df_plot = df_all.sum(axis = 0, skipna = True)
+    
+    plt.rcParams["figure.figsize"] = [12, 15]
     df_plot.plot(kind="bar")
     plt.title(f"{date} Stats",fontsize=24);
     plt.ylabel("Count");
@@ -33,6 +42,7 @@ def combine_stats(path,date):
     xs = np.arange(0,len(df_plot.values),1)
     for x, y in zip(xs,df_plot):
         y_ = y+0.2
+        x = x-0.3
         plt.text(x,y_,f"{int(y)}")
     plt.tight_layout()
     plt.show()

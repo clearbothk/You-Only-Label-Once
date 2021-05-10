@@ -15,7 +15,9 @@ from yolo_check import clone_yolo
 from convert_images import convert, rename
 from relabel_correct_check_2 import correct_check
 from crop_images import crop_images
-from filter_app_main_gui import filter_app
+from relabel_filter_app import filter_app
+from relabel_read_stats import read_stats
+from step5_combine_stats import combine_stats
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -77,7 +79,14 @@ def step3():
     filter_app(path, main)
 
 def step4():
-    pass
+    path = f'{c_relabel}'
+    os.chdir(path)
+    read_stats(date,time)
+
+def step5():
+    print(os.getcwd())
+    combine_stats(date)
+
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -190,14 +199,14 @@ func3_text.set('Step 3')
 func3_btn.grid(column=1, row=3)
 
 func4_text = tk.StringVar()
-func4_btn = tk.Button(main, textvariable=func4_text, height=4, width=30, borderwidth=5)
+func4_btn = tk.Button(main, textvariable=func4_text, command=step4, height=4, width=30, borderwidth=5)
 func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
 
-# func5_text = tk.StringVar()
-# func5_btn = tk.Button(main, textvariable=func5_text, height=4, width=30, borderwidth=5)
-# func5_text.set('Step 5')
-# func5_btn.grid(column=1, row=5)
+func5_text = tk.StringVar()
+func5_btn = tk.Button(main, textvariable=func5_text, command=step5, height=4, width=30, borderwidth=5)
+func5_text.set('Step 5')
+func5_btn.grid(column=1, row=5)
 
 # func6_text = tk.StringVar()
 # func6_btn = tk.Button(root, textvariable=func6_text, command=lambda:test('empty'))

@@ -136,7 +136,7 @@ def step4():
     read_stats(PROJECT + NAME,date,time)
 
 def step5():
-    combine_stats(PROJECT, date)
+    combine_stats(date)
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
