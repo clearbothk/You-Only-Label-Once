@@ -7,7 +7,7 @@ import os
 import numpy as np
 
 
-def combine_stats(path):
+def combine_stats(path,date):
     csv_paths = []
     for f in glob.glob(f"{path}/*.csv"):
         csv_paths.append(f)
@@ -26,7 +26,7 @@ def combine_stats(path):
 
     plt.rcParams["figure.figsize"] = [15, 20]
     df_plot.plot(kind="bar")
-    plt.title("All Time Stats",fontsize=24);
+    plt.title(f"{date} Stats",fontsize=24);
     plt.ylabel("Count");
 
     df_plot.values
