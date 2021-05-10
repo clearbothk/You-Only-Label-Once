@@ -13,40 +13,40 @@ import os
 def read_stats(path,date,time):
     import json
     os.chdir(path)
-    os.makedirs("./mergedjson",exist_ok=True)
-    os.chdir(path+'/Object Materials')
-    result = []
-    index = []
+    # os.makedirs("./mergedjson",exist_ok=True)
+    # os.chdir(path+'/Object Materials')
+    # result = []
+    # index = []
 
-    for f in glob.glob("*.json"):
-        print(f)
-        index.append(f.split(".")[0])
-        with open(f, "r") as infile:
-            dict_ = json.load(infile)
-            result.append(dict_)
-    os.chdir(path)
-    with open(f"./mergedjson/{date}_{time}_merged_file.json", "w") as outfile:
-        json.dump(result, outfile)
+    # for f in glob.glob("*.json"):
+    #     print(f)
+    #     index.append(f.split(".")[0])
+    #     with open(f, "r") as infile:
+    #         dict_ = json.load(infile)
+    #         result.append(dict_)
+    # os.chdir(path)
+    # with open(f"./mergedjson/{date}_{time}_merged_file.json", "w") as outfile:
+    #     json.dump(result, outfile)
 
-    with open(f"./mergedjson/{date}_{time}_merged_file.json") as f:
+    with open(f"./Object Materials/stats.json") as f:
         data = json.load(f)
-
+    
         
     d = {}
 
-    for json in data:
-        for object_ in json.keys():
-            for i in json[object_]:
-                key = object_ +"_"+ i
-                value = len(json[object_][i])
-                d.setdefault(key, []).append(value)
-
+    for object_ in data:
+        for i in data[object_]:
+            key = object_ +"_"+ i
+            value = len(data[object_][i])
+            d.setdefault(key, []).append(value)
+    index = [f"{date}_{time}"]
     df = pd.DataFrame(d, index=index)
     df.to_csv(f'Object Materials/{date}_{time}_stats.csv')
+    ##Copy for the all-time-stats
+    df.to_csv(f'../{date}_{time}_stats.csv')
 
 
     sns.barplot(data=df, color="blue")
     plt.xticks(rotation=90)
     plt.tight_layout()
     plt.show()
-

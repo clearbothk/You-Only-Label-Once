@@ -50,7 +50,9 @@ def filter_app(pathpath_in,window):
 
     object_list = ['bottle', 'can', 'cup', 'box_drink', 'face_mask', 'plastic_bag', 'utensils']
     object_class = '_______'
-
+    stats_dict = {}
+    for i in object_list:
+        stats_dict[i] = material_dict
     # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
     # Read all folders in the selected Directory
