@@ -80,7 +80,7 @@ def correct_check(project, name, window):
         image_ = ImageTk.PhotoImage(image)
         image_ori = tk.Label(root, image=image_)
         image_ori.image = image_
-        image_ori.grid(column=5, columnspan=5, row=1, rowspan=3)
+        image_ori.grid(column=5, columnspan=6, row=1, rowspan=3)
 
 
 
@@ -333,7 +333,8 @@ def correct_check(project, name, window):
     func0_text = tk.StringVar()
     func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:copy_files())
     func0_text.set('Copy Files and Quit')
-    func0_btn.grid(column=10, row=5)
+    func0_btn.grid(column=4, row=7)
+
 
     # func1_text = tk.StringVar()
     # func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_file())
@@ -343,17 +344,17 @@ def correct_check(project, name, window):
     func2_text = tk.StringVar()
     func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_label_class())
     func2_text.set('Delete (del)')
-    func2_btn.grid(column=10, row=2)
+    func2_btn.grid(column=4, row=4)
 
     func3_text = tk.StringVar()
     func3_btn = tk.Button(root, textvariable=func3_text, command=lambda:next_image())
     func3_text.set('Next + (>)')
-    func3_btn.grid(column=10, row=3)
+    func3_btn.grid(column=4, row=5)
 
     func4_text = tk.StringVar()
     func4_btn = tk.Button(root, textvariable=func4_text, command=lambda:prev_image())
     func4_text.set('Prev - (<)')
-    func4_btn.grid(column=10, row=4)
+    func4_btn.grid(column=4, row=6)
 
 
     number = tk.Label(root, text='')
