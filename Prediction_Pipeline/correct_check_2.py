@@ -234,9 +234,11 @@ def correct_check(project, name, window):
     def copy_files():
         global folder_path
         # print(folder_path)
-        os.chdir(folder_path)
-        os.chdir("..")
-        # print(os.getcwd())
+
+        os.chdir(Project + Name)
+        # os.chdir("..")
+        print(os.getcwd())
+
         os.makedirs("./Correct/",exist_ok=True)
         os.makedirs("./Correct/images",exist_ok=True)
         os.makedirs("./Correct/labels",exist_ok=True)

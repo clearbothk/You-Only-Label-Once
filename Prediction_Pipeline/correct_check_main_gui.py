@@ -197,7 +197,7 @@ def correct_check(pathpath_in, window):
         global folder_path
         # print(folder_path)
         os.chdir(folder_path)
-        os.chdir("..")
+        # os.chdir("..")
         # print(os.getcwd())
         os.makedirs("./Correct/",exist_ok=True)
         os.makedirs("./Correct/images",exist_ok=True)
