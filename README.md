@@ -43,18 +43,26 @@
     * [TACO Dataset](http://tacodataset.org/ "Taco Dataset")
     * [Kaggle Dataset](https://www.kaggle.com/asdasdasasdas/garbage-classification "Kaggle Dataset") - Plastic 
     * [Trashnet Dataset](https://github.com/garythung/trashnet "Thung & Yang") - Thung & Yang
+* Python script used to remove duplicate images and images with low resolutions
 * LabelImg was used to annotate images with bounding boxes
 
-## YOLOv5 Modelling
-* Experimented with various YOLOv5 models (s/m/l/xl)
-* The final model was trained on Large
-* The model produced promising results in identifying the object however the material could not be differentiated. This led us to creating a second model to identify material, given an object category.
+## Data Overview
+* 6 Classes Bottle, Can, Cup, Box Drink, Face Mask, Plastic Bag
+* 5,210 Unique Images
+* 9,675 Labels
 
-## CNN Modelling
+## YOLOv5 Modelling
+* Experimented with various YOLOv5 models (s/m/l/xl).
+* The final model was trained on M after considering accuracy, recall, and training/predicting time.
+* The model produced promising results in identifying objects, however object material could not be differentiated. 
+    * Our solution was to create a GUI to assign material classes quickly and accurately by human eye instead of having a model mislabel material classes.
+
+## CNN Modelling (Experimented, not implemented)
 * Using the same images (cropped) used in the YOLO Model Training, we trained our CNN model to classify the material given an object category. Eg. This a bottle, is it a plastic or glass bottle.
 * Material prediction accuracy varied depending on the object category.
+* Poor results from this method led us to go with the GUI methodology.
 
-**Final CNN Model**
+**CNN Model Experimented**
 ```
 model = tf.keras.Sequential([data_augmentation])
 model.add(Conv2D(input_shape=(img_height,img_width,3),filters=64,kernel_size=(3,3),padding="same", activation="relu", kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4)))
@@ -78,7 +86,18 @@ model.add(Dense(num_classes, activation = 'softmax', kernel_regularizer=regulari
 ```
 ## Production
 * Python scripts created to streamline pipeline process of converting Raw images to images and labels in folders ready for YOLO training.
-* Tkinter GUI being developed to provide simple interface for all the basic functions
+* Tkinter GUI developed to provide simple interface for quick object and material classifications
+
+## Main Challenges
+* Data - Difficult to find quality images of trash in sufficient volume. Limitations on variety of images found via search engines. 
+* Model - Material detection is not a mature technology yet.  A lot of theoretical approaches that are difficult to replicate.
+* Workflow - Branching into software/UX solution implementation
+
+## Future Improvements
+* Alternative Model - Material detection currently done manually. Develop, test and integrate a proven detection model.
+* Given more information about the trash found in HK Waters, we can expand the current (6) YOLO object detection to include other object classes
+* Relabelling tool relies on LabelImg for incorrect YOLO image predictions. An in-house solution would increase the efficiency and streamline the process.
+* Future data capture by Clearbot can be re-fed into the model for improved overall performance.
 
 ## Presentation
 [PowerPoint](https://github.com/azwinlam/beerpricechecker/blob/main/Beer%20Price%20Checker.pptx)
@@ -87,7 +106,7 @@ model.add(Dense(num_classes, activation = 'softmax', kernel_regularizer=regulari
 ## File Structure
 ```
 📦Prediction_Pipeline
- ┣ 📂main_function
+ ┣ 📂main_functions
  ┃ ┣ 📜main_combine_stats.py
  ┃ ┣ 📜main_convert_images.py
  ┃ ┣ 📜main_correct_check.py
@@ -114,4 +133,25 @@ model.add(Dense(num_classes, activation = 'softmax', kernel_regularizer=regulari
  ┣ 📜relabel_gui.py
  ┗ 📜requirements.txt
 ```
+
+## References
+Modelling
+* YOLOv5: https://github.com/ultralytics/yolov5
+
+Webscraping
+* Image Scraper: https://github.com/debadridtt/Scraping-Google-Images-using-Python
+
+Labelling
+* LabelImg: https://github.com/tzutalin/labelImg 
+
+Datasets
+* Plastic Images: https://www.kaggle.com/nandinibagga/plastic-images
+* Waste Classification Data: https://www.kaggle.com/techsash/waste-classification-data
+* Taco Dataset: http://tacodataset.org/ 
+* TrashNet Dataset: https://github.com/garythung/trashnet
+
+Research Papers
+* Material Recognition: https://openaccess.thecvf.com/content_cvpr_2015/papers/Bell_Material_Recognition_in_2015_CVPR_paper.pdf 
+
+
 
