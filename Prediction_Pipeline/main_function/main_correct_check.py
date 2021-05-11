@@ -70,25 +70,25 @@ def correct_check(project, name, window):
         image = Image.open(image_path)
         image.thumbnail(MAX_SIZE)
         image_ = ImageTk.PhotoImage(image)
-        image_ori = tk.Label(root, image=image_)
+        image_ori = tk.Label(left_frame, image=image_)
         image_ori.image = image_
-        image_ori.grid(column=5, columnspan=6, row=1, rowspan=3)
+        image_ori.grid(column=0, columnspan=5, row=0, rowspan=1)
 
         # for bounded image
         try:
-            bou_img = img_bound(folder_path, labels_path,  image_dict[current_image].split('.')[0])
+            bou_img = img_bound(image640_path, labels_path,  image_dict[current_image].split('.')[0])
             bou_img = Image.fromarray(bou_img)
             b, g, r = bou_img.split()
             bou_img = Image.merge('RGB', (r,g,b))
             bou_img.thumbnail(MAX_SIZE)
             bou_img_ = ImageTk.PhotoImage(bou_img)
-            image_bou = tk.Label(root, image=bou_img_)
+            image_bou = tk.Label(left_frame, image=bou_img_)
             image_bou.image = bou_img_
-            image_bou.grid(column=0, columnspan=5, row=1, rowspan=3)
+            image_bou.grid(column=0, columnspan=5, row=5, rowspan=1)
         except:
             if AttributeError or UnboundLocalError:
-                image_bou = tk.Label(root, text = "No Bounded Objects Found in this Image")
-                image_bou.grid(column=0, columnspan=5, row=1, rowspan=3)
+                image_bou = tk.Label(left_frame, text='No Bounded Image')
+                image_bou.grid(column=0, columnspan=5, row=5, rowspan=3)
 
         number['text'] = f'{int(current_image+1)} / {len(list_images)} '
 
@@ -301,10 +301,16 @@ def correct_check(project, name, window):
     # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
     # start
+    # start
     root = tk.Toplevel(window)
     root.title("YOLO Image Reviewer")
-    root.state('zoomed')
-    
+
+    left_frame = Frame(root)
+    left_frame.grid(row=0, column=0, sticky="nswe")
+
+    right_frame = Frame(root)
+    right_frame.grid(row=0, column=1, sticky="nswe")
+
     # KeyBinding Controls
 
     root.bind("<Key>", handle_keypress)
@@ -320,58 +326,59 @@ def correct_check(project, name, window):
     canvas.grid(columnspan=12, rowspan=7)
 
     func0_text = tk.StringVar()
-    func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:copy_files())
+    func0_btn = tk.Button(right_frame, textvariable=func0_text, width = 31, height = 4, command=lambda:copy_files())
     func0_text.set('Copy Files and Quit')
-    func0_btn.grid(column=4, row=7)
+    func0_btn.grid(column=6, row=16, columnspan=2,sticky="w")
 
     func2_text = tk.StringVar()
-    func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_label_class())
+    func2_btn = tk.Button(right_frame, textvariable=func2_text, width =15, height = 4,command=lambda:delete_label_class())
     func2_text.set('Delete (del)')
-    func2_btn.grid(column=4, row=4)
+    func2_btn.grid(column=7, row=5,sticky="w")
 
     func3_text = tk.StringVar()
-    func3_btn = tk.Button(root, textvariable=func3_text, command=lambda:next_image())
+    func3_btn = tk.Button(right_frame, textvariable=func3_text, width = 15, height = 4,command=lambda:next_image())
     func3_text.set('Next + (>)')
-    func3_btn.grid(column=4, row=5)
+    func3_btn.grid(column=7, row=7,sticky="w")
 
     func4_text = tk.StringVar()
-    func4_btn = tk.Button(root, textvariable=func4_text, command=lambda:prev_image())
+    func4_btn = tk.Button(right_frame, textvariable=func4_text, width = 15, height = 4,command=lambda:prev_image())
     func4_text.set('Prev - (<)')
-    func4_btn.grid(column=4, row=6)
+    func4_btn.grid(column=7, row=9,sticky="w")
 
-    number = tk.Label(root, text='')
-    number.grid(columnspan=1, column=3, row=4)
 
-    classified = tk.Label(root, text='')
-    classified.grid(columnspan=1, column=3, row=5)
+    number = tk.Label(right_frame, text='',font=('Calibri', 20))
+    number.grid(columnspan=1, column=8, row=1)
 
-    filename_title = tk.Label(root, text='File Name:')
-    filename_title.grid(columnspan=1, column=0, row=4)
+    classified = tk.Label(right_frame, text='',font=('Calibri', 20))
+    classified.grid(columnspan=1, column=8, row=2)
 
-    filename_text = tk.Label(root, text='File Name')
-    filename_text.grid(columnspan=2, column=1, row=4)
+    filename_title = tk.Label(right_frame, text='File Name:',font=('Calibri', 20))
+    filename_title.grid(columnspan=1, column=6, row=1,sticky="w")
 
-    filename_title = tk.Label(root, text='Label:')
-    filename_title.grid(columnspan=1, column=0, row=5)
+    filename_text = tk.Label(right_frame, text='File Name',font=('Calibri', 20))
+    filename_text.grid(columnspan=1, column=7, row=1,sticky="w")
 
-    fileclass_text = tk.Label(root, text='Correct/Incorrect/Remove')
-    fileclass_text.grid(columnspan=2, column=1, row=5)
+    filename_title = tk.Label(right_frame, text='Label:',font=('Calibri', 20))
+    filename_title.grid(columnspan=1, column=6, row=2,sticky="w")
+
+    fileclass_text = tk.Label(right_frame, text='Correct/Incorrect/Remove',font=('Calibri', 20))
+    fileclass_text.grid(columnspan=1, column=7, row=2,sticky="w")
 
     # labelling buttons
     correct_txt = tk.StringVar()
-    correct_btn = tk.Button(root, textvariable=correct_txt, command=lambda:select_label('Correct'))
+    correct_btn = tk.Button(right_frame, textvariable=correct_txt, height=4, width = 15,command=lambda:select_label('Correct'))
     correct_txt.set('Correct (1)')
-    correct_btn.grid(column=0, row=6)
+    correct_btn.grid(column=6, row=5)
 
     incorrect_txt = tk.StringVar()
-    incorrect_btn = tk.Button(root, textvariable=incorrect_txt, command=lambda:select_label('Incorrect'))
+    incorrect_btn = tk.Button(right_frame, textvariable=incorrect_txt, height =4, width = 15, command=lambda:select_label('Incorrect'))
     incorrect_txt.set('Incorrect (2)')
-    incorrect_btn.grid(column=1, row=6)
+    incorrect_btn.grid(column=6, row=7)
 
     remove_txt = tk.StringVar()
-    remove_btn = tk.Button(root, textvariable=remove_txt, command=lambda:select_label('Remove'))
+    remove_btn = tk.Button(right_frame, textvariable=remove_txt, height=4, width = 15,command=lambda:select_label('Remove'))
     remove_txt.set('Remove (3)')
-    remove_btn.grid(column=3, row=6)
+    remove_btn.grid(column=6, row=9)
 
     open_file()
 
