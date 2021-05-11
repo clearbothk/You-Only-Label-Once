@@ -5,16 +5,15 @@ import tkinter as tk
 import os
 import glob
 import json
-import shutil
 from datetime import date, datetime
 
 # import over .py file to call the functions-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
-from relabel_correct_check import correct_check
-from relabel_crop_images import crop_images
-from relabel_filter_app import filter_app
-from relabel_read_stats import read_stats
-from relabel_combine_stats import combine_stats
+from relabel_functions.relabel_correct_check import correct_check
+from relabel_functions.relabel_crop_images import crop_images
+from relabel_functions.relabel_filter_app import filter_app
+from relabel_functions.relabel_read_stats import read_stats
+from relabel_functions.relabel_combine_stats import combine_stats
 
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
@@ -141,8 +140,8 @@ Display statistics for current batch of images''',
 func4_title.grid(column=0, row=4)
 
 func5_title = tk.Label(main, 
-                        text='''Step 5.
-Display overall statistics for the day
+                        text=f'''Step 5.
+Show {date} Stats
 ''', 
                         justify='left',
                         anchor=W,
