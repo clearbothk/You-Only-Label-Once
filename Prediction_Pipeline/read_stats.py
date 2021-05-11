@@ -26,7 +26,7 @@ def read_stats(path, date, time):
             d.setdefault(key, []).append(value)
     index = [f"{date}_{time}"]
     df = pd.DataFrame(d, index=index)
-    df.to_csv(f'Object Materials/stats.csv')
+    df.to_csv(f'Object Materials/obj_material_stats.csv')
 
     sns.barplot(data=df, color="blue")
     plt.xticks(rotation=90)

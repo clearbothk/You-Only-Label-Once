@@ -14,6 +14,8 @@ from relabel_correct_check import correct_check
 from crop_images import crop_images
 from relabel_filter_app import filter_app
 from relabel_read_stats import read_stats
+from step5_combine_stats import combine_stats
+
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -61,10 +63,15 @@ def step3():
     filter_app(path, main)
 
 def step4():
-    print('step4')
-    path = c_relabel
-    read_stats(path, date, time)
-    
+    path = f'{c_relabel}'
+    os.chdir(path)
+    read_stats(date,time)
+
+def step5():
+    print(os.getcwd())
+    combine_stats(date)
+
+
 
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
