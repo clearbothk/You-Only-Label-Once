@@ -388,7 +388,7 @@ def filter_app(pathpath_in,window):
                 print("No stats.json")
             
             stats_dict[object_class] = material_dict
-
+            print(stats_dict)
             # create and update stats dict
             with open(f'{prediction_folder}/Object Materials/stats.json', 'w') as f:
                 json.dump(stats_dict,f)
@@ -489,7 +489,7 @@ def filter_app(pathpath_in,window):
 
     # Starts
     root = tk.Toplevel(window)
-    root.geometry('700x700')
+    root.geometry('700x720')
     root.title('Object Material Filter')
 
     # KeyBinding Controls
@@ -508,96 +508,97 @@ def filter_app(pathpath_in,window):
     object_menu = StringVar()
     object_menu.set('None') # default value
     w = OptionMenu(root, object_menu, None)
-    w.grid(column=5, row=0)
+    w.config(width=12, height=3)
+    w.grid(column=5, row=0, sticky='w')
 
     # Setting Canvas
     canvas = tk.Canvas(root, width=700, height=700)
     canvas.grid(columnspan=8, rowspan=7)
 
     # Instructions
-    instructions = tk.Label(root, text=f'Please select the what material the {object_class} is made of')
+    instructions = tk.Label(root, text=f'Please select the what material the {object_class} is made of', font=('', 12, 'bold'))
     instructions.grid(columnspan=5, column=0, row=0)
 
-    filename_title = tk.Label(root, text='File Name:')
+    filename_title = tk.Label(root, text='File Name:', font=('', 12))
     filename_title.grid(columnspan=1, column=0, row=4)
 
-    filename_text = tk.Label(root, text='File Name')
+    filename_text = tk.Label(root, text='File Name', font=('', 12))
     filename_text.grid(columnspan=2, column=1, row=4)
 
-    fileclass_title = tk.Label(root, text='Object Material:')
+    fileclass_title = tk.Label(root, text='Material:', font=('', 12))
     fileclass_title.grid(columnspan=1, column=0, row=5)
 
-    fileclass_text = tk.Label(root, text='Material')
+    fileclass_text = tk.Label(root, text='Material', font=('', 12))
     fileclass_text.grid(columnspan=2, column=1, row=5)
 
-    number_img = tk.Label(root, text='None')
+    number_img = tk.Label(root, text='None', font=('', 12))
     number_img.grid(columnspan=1, column=3, row=4)
 
-    classified = tk.Label(root, text='None')
+    classified = tk.Label(root, text='None', font=('', 12))
     classified.grid(columnspan=1, column=3, row=5)
 
     # material buttons
     plastic_text = tk.StringVar()
-    plastic_btn = tk.Button(root, textvariable=plastic_text, command=lambda:select_material('Plastic'))
+    plastic_btn = tk.Button(root, textvariable=plastic_text, command=lambda:select_material('Plastic'), height=3, width=15)
     plastic_text.set('Plastic (1)')
     plastic_btn.grid(column=0, row=6)
 
     metal_text = tk.StringVar()
-    metal_btn = tk.Button(root, textvariable=metal_text, command=lambda:select_material('Metal'))
+    metal_btn = tk.Button(root, textvariable=metal_text, command=lambda:select_material('Metal'), height=3, width=15)
     metal_text.set('Metal (2)')
     metal_btn.grid(column=1, row=6)
 
     styro_text = tk.StringVar()
-    styro_btn = tk.Button(root, textvariable=styro_text, command=lambda:select_material('Styrofoam'))
+    styro_btn = tk.Button(root, textvariable=styro_text, command=lambda:select_material('Styrofoam'), height=3, width=15)
     styro_text.set('Styrofoam (3)')
     styro_btn.grid(column=2, row=6)
 
     glass_text = tk.StringVar()
-    glass_btn = tk.Button(root, textvariable=glass_text, command=lambda:select_material('Glass'))
+    glass_btn = tk.Button(root, textvariable=glass_text, command=lambda:select_material('Glass'), height=3, width=15)
     glass_text.set('Glass (4)')
     glass_btn.grid(column=3, row=6)
 
     paper_text = tk.StringVar()
-    paper_btn = tk.Button(root, textvariable=paper_text, command=lambda:select_material('Paper'))
+    paper_btn = tk.Button(root, textvariable=paper_text, command=lambda:select_material('Paper'), height=3, width=15)
     paper_text.set('Paper (5)')
     paper_btn.grid(column=4, row=6)
 
     unknown_text = tk.StringVar()
-    unknown_btn = tk.Button(root, textvariable=unknown_text, command=lambda:select_material('Unknown'))
+    unknown_btn = tk.Button(root, textvariable=unknown_text, command=lambda:select_material('Unknown'), height=3, width=15)
     unknown_text.set('Unknown (6)')
-    unknown_btn.grid(column=5, row=6)
+    unknown_btn.grid(column=5, row=6, sticky='w')
 
     facemask_text = tk.StringVar()
-    facemask_btn = tk.Button(root, textvariable=facemask_text, command=lambda:skip_select_material('FaceMask'))
+    facemask_btn = tk.Button(root, textvariable=facemask_text, command=lambda:skip_select_material('FaceMask'), height=3, width=15)
     facemask_text.set('Face Masks')
-    facemask_btn.grid(column=0, row=7)
+    facemask_btn.grid(column=0, row=7, sticky='n')
 
     plasbag_text = tk.StringVar()
-    plasbag_btn = tk.Button(root, textvariable=plasbag_text, command=lambda:skip_select_material('Plastic'))
+    plasbag_btn = tk.Button(root, textvariable=plasbag_text, command=lambda:skip_select_material('Plastic'), height=3, width=15)
     plasbag_text.set('Plastic Bags')
-    plasbag_btn.grid(column=1, row=7)
+    plasbag_btn.grid(column=1, row=7, sticky='n')
 
     tetra_text = tk.StringVar()
-    tetra_btn = tk.Button(root, textvariable=tetra_text, command=lambda:skip_select_material('TetraPack'))
+    tetra_btn = tk.Button(root, textvariable=tetra_text, command=lambda:skip_select_material('TetraPack'), height=3, width=15)
     tetra_text.set('Box Drinks')
-    tetra_btn.grid(column=2, row=7)
+    tetra_btn.grid(column=2, row=7, sticky='n')
 
     # function buttons
 
     func2_text = tk.StringVar()
-    func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_material_class())
+    func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_material_class(), height=4, width=15)
     func2_text.set('Delete (del/bksp)')
-    func2_btn.grid(column=5, row=2)
+    func2_btn.grid(column=5, row=2, sticky='w')
 
     func3_text = tk.StringVar()
-    func3_btn = tk.Button(root, textvariable=func3_text, command=lambda:next_image())
+    func3_btn = tk.Button(root, textvariable=func3_text, command=lambda:next_image(), height=4, width=15)
     func3_text.set('Next + (>)')
-    func3_btn.grid(column=5, row=3)
+    func3_btn.grid(column=5, row=3, sticky='w')
 
     func4_text = tk.StringVar()
-    func4_btn = tk.Button(root, textvariable=func4_text, command=lambda:prev_image())
+    func4_btn = tk.Button(root, textvariable=func4_text, command=lambda:prev_image(), height=4, width=15)
     func4_text.set('Prev - (<)')
-    func4_btn.grid(column=5, row=4)
+    func4_btn.grid(column=5, row=4, sticky='w')
     
     open_directory()
     # finish
