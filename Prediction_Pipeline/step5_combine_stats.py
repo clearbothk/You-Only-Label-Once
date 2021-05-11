@@ -10,9 +10,9 @@ import numpy as np
 def combine_stats(date):
     csv_paths = []
     print(os.getcwd())
-    for f in glob.glob("./Object Materials/*.csv"):
+    for f in glob.glob("../predictions*/Object Materials/*.csv"):
         csv_paths.append(f)
-    for f in glob.glob("./relabel_Object Materials/*.csv"):
+    for f in glob.glob("../predictions*/relabel_Object Materials/*.csv"):
         csv_paths.append(f)
 
     grab_headers = pd.read_csv(csv_paths[0]).columns.tolist()
