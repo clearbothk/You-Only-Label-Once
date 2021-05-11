@@ -1,3 +1,4 @@
+#from main import SOURCE
 from tkinter import filedialog
 import tkinter as tk
 import platform

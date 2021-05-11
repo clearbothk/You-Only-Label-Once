@@ -388,7 +388,7 @@ def filter_app(pathpath_in,window):
                 print("No stats.json")
             
             stats_dict[object_class] = material_dict
-
+            print(stats_dict)
             # create and update stats dict
             with open(f'{prediction_folder}/Object Materials/stats.json', 'w') as f:
                 json.dump(stats_dict,f)
