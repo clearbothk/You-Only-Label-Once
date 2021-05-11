@@ -5,11 +5,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
-#Not needed as main_gui runs this function and the variables are there
-# from datetime import date, datetime
-# date = str(date.today())
-# time = datetime.now().strftime("%H_%M")
-
 def read_stats(path, date, time):
     import json
     os.chdir(path)

@@ -4,16 +4,13 @@ from PIL import ImageTk, Image
 import tkinter as tk
 import os
 import glob
-from time import localtime, strftime
 import json
 import shutil
 from datetime import date, datetime
 
 # import over .py file to call the functions-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
-from yolo_check import clone_yolo
-from convert_images import convert, rename
-from relabel_correct_check_2 import correct_check
+from relabel_correct_check import correct_check
 from crop_images import crop_images
 from relabel_filter_app import filter_app
 from relabel_read_stats import read_stats
@@ -37,18 +34,10 @@ def step1():
     os.chdir(ic_path)
     os.chdir('..')
     c_relabel = os.getcwd()
-    os.makedirs("./relabel_Correct/",exist_ok=True)
-    os.makedirs("./relabel_Correct/images",exist_ok=True)
-    os.makedirs("./relabel_Correct/labels",exist_ok=True)
-    os.makedirs("./relabel_Incorrect/",exist_ok=True)
-    os.makedirs("./relabel_Incorrect/images",exist_ok=True)
-    os.makedirs("./relabel_Incorrect/labels",exist_ok=True)
-    os.makedirs("./relabel_Remove/",exist_ok=True)
-    os.makedirs("./relabel_Remove/images",exist_ok=True)
-    os.makedirs("./relabel_Remove/labels",exist_ok=True)
+
     # disable and set button text to 'Done' to indicate loading files and prediction has been completed
-    # func1_text.set('Done')
-    # func1_btn['state'] = 'disable'
+    func1_text.set('Done')
+    func1_btn['state'] = 'disable'
 
 def step2():
     """TKINTER"""
@@ -66,8 +55,6 @@ def step2():
         os.makedirs(f'{c_relabel}/relabel_Correct/cropped/{cat}', exist_ok=True)
 
     crop_images(files, f'{c_relabel}/relabel_Correct', item_class_dict)
-
-    # Should have a close button or have copy files automatically close window
 
 def step3():
     path = f'{c_relabel}/relabel_Correct/cropped'
@@ -89,19 +76,6 @@ main.title('Relabel GUI')
 ico = Image.open('clearbot.png')
 photo = ImageTk.PhotoImage(ico)
 main.wm_iconphoto(False, photo)
-
-
-# KeyBinding Controls
-# root.bind("<Key>", handle_keypress)
-# root.bind("<Left>", left)
-# root.bind('<Right>', right)
-# root.bind('<Escape>', quitquit)
-# root.bind('<BackSpace>', deldel)
-# root.bind('<Shift-BackSpace>', deldelclean)
-# root.bind('<Delete>', deldel)
-# root.bind('<Shift-Delete>', deldelclean)
-# root.bind('<Up>', up)
-# root.bind('<Down>', down)
 
 # Setting Canvas
 canvas_main = tk.Canvas(main, width=700, height=750)
@@ -169,9 +143,6 @@ func5_title = tk.Label(main,
                         font=('Calibri', 12))
 func5_title.grid(column=0, row=5)
 
-# func6_title = tk.Label(root, text='None')
-# func6_title.grid(column=0, row=6)
-
 # Function buttons
 
 func1_text = tk.StringVar()
@@ -193,41 +164,6 @@ func4_text = tk.StringVar()
 func4_btn = tk.Button(main, textvariable=func4_text, command=step4, height=4, width=30, borderwidth=5)
 func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
-
-# func5_text = tk.StringVar()
-# func5_btn = tk.Button(main, textvariable=func5_text, height=4, width=30, borderwidth=5)
-# func5_text.set('Step 5')
-# func5_btn.grid(column=1, row=5)
-
-# func6_text = tk.StringVar()
-# func6_btn = tk.Button(root, textvariable=func6_text, command=lambda:test('empty'))
-# func6_text.set('func 6')
-# func6_btn.grid(column=6, row=0)
-
-# func7_text = tk.StringVar()
-# func7_btn = tk.Button(root, textvariable=func7_text, command=lambda:test('empty'))
-# func7_text.set('func 7')
-# func7_btn.grid(column=6, row=1)
-
-# func8_text = tk.StringVar()
-# func8_btn = tk.Button(root, textvariable=func8_text, command=lambda:test('empty'))
-# func8_text.set('func 8')
-# func8_btn.grid(column=6, row=2)
-
-# func9_text = tk.StringVar()
-# func9_btn = tk.Button(root, textvariable=func9_text, command=lambda:test('empty'))
-# func9_text.set('func 9')
-# func9_btn.grid(column=6, row=3)
-
-# func10_text = tk.StringVar()
-# func10_btn = tk.Button(root, textvariable=func10_text, command=lambda:test('empty'))
-# func10_text.set('func 10')
-# func10_btn.grid(column=6, row=4)
-
-# func11_text = tk.StringVar()
-# func11_btn = tk.Button(root, textvariable=func11_text, command=lambda:test('empty'))
-# func11_text.set('func 11')
-# func11_btn.grid(column=6, row=5)
 
 # finish
 main.mainloop()
