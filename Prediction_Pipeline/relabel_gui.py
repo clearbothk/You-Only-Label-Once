@@ -11,10 +11,10 @@ from datetime import date, datetime
 # import over .py file to call the functions-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 from relabel_correct_check import correct_check
-from crop_images import crop_images
+from relabel_crop_images import crop_images
 from relabel_filter_app import filter_app
 from relabel_read_stats import read_stats
-from step5_combine_stats import combine_stats
+from relabel_combine_stats import combine_stats
 
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
@@ -142,6 +142,7 @@ func4_title.grid(column=0, row=4)
 
 func5_title = tk.Label(main, 
                         text='''Step 5.
+Display overall statistics for the day
 ''', 
                         justify='left',
                         anchor=W,
@@ -171,6 +172,11 @@ func4_text = tk.StringVar()
 func4_btn = tk.Button(main, textvariable=func4_text, command=step4, height=4, width=30, borderwidth=5)
 func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
+
+func5_text = tk.StringVar()
+func5_btn = tk.Button(main, textvariable=func5_text, command=step5, height=4, width=30, borderwidth=5)
+func5_text.set('Step 5')
+func5_btn.grid(column=1, row=5)
 
 # finish
 main.mainloop()
