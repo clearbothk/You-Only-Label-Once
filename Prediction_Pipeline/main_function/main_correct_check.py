@@ -76,7 +76,7 @@ def correct_check(project, name, window):
 
         # for bounded image
         try:
-            bou_img = img_bound(image640_path, labels_path,  image_dict[current_image].split('.')[0])
+            bou_img = img_bound(folder_path, labels_path,  image_dict[current_image].split('.')[0])
             bou_img = Image.fromarray(bou_img)
             b, g, r = bou_img.split()
             bou_img = Image.merge('RGB', (r,g,b))
