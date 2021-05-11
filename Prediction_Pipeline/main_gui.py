@@ -9,14 +9,14 @@ from datetime import date, datetime
 
 # import over .py file to call the functions-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
-from main_function.main_yolo_check import clone_yolo
-from main_function.main_convert_images import convert, rename
-from main_function.main_crop_images import crop_images
-from main_function.main_correct_check import correct_check
-from main_function.main_filter_app import filter_app
-from main_function.main_read_stats import read_stats
-from main_function.main_combine_stats import combine_stats
-from main_function.main_load_source import load
+from main_functions.main_yolo_check import clone_yolo
+from main_functions.main_convert_images import convert, rename
+from main_functions.main_crop_images import crop_images
+from main_functions.main_correct_check import correct_check
+from main_functions.main_filter_app import filter_app
+from main_functions.main_read_stats import read_stats
+from main_functions.main_combine_stats import combine_stats
+from main_functions.main_load_source import load
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
