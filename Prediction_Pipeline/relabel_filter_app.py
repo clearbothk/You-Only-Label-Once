@@ -17,6 +17,7 @@ def filter_app(pathpath_in,window):
     global object_class
     global object_menu
     global pathpath
+
     # for main_gui functionality
     pathpath = pathpath_in
 
@@ -92,7 +93,6 @@ def filter_app(pathpath_in,window):
             num_img_init = len([ i for i in os.listdir(dir_dict[list_dir[dir_index]]) if '.jpg' in i])
             object_menu.set(f'{list_dir[0]} ({num_img_init})')
             open_file_multi(dir_dict[list_dir[dir_index]])
-            print(list_dir[dir_index])
         except FileNotFoundError:
             print('Directory Not Selected (Open Folder)')
 
@@ -104,7 +104,6 @@ def filter_app(pathpath_in,window):
         # need to split() the object_menu.get() get just the object name without the num_img
         temp_object = object_menu.get().split()[0]
         dir_index = list_dir.index(temp_object)
-        print(temp_object)
         open_file_multi(dir_dict[list_dir[dir_index]])
         copy_files()
 
@@ -115,7 +114,6 @@ def filter_app(pathpath_in,window):
                 dir_index -= 1
                 num_img_init = len([ i for i in os.listdir(dir_dict[list_dir[dir_index]]) if '.jpg' in i])
                 object_menu.set(f'{list_dir[dir_index]} ({num_img_init})')
-                print(list_dir[dir_index])
                 open_file_multi(dir_dict[list_dir[dir_index]])
             else:
                 print('Top of Options Menu')
@@ -128,8 +126,7 @@ def filter_app(pathpath_in,window):
             if dir_index < (len(list_dir))-1:
                 dir_index += 1
                 num_img_init = len([ i for i in os.listdir(dir_dict[list_dir[dir_index]]) if '.jpg' in i])
-                object_menu.set(f'{list_dir[dir_index]} ({num_img_init})')
-                print(list_dir[dir_index])            
+                object_menu.set(f'{list_dir[dir_index]} ({num_img_init})')         
                 open_file_multi(dir_dict[list_dir[dir_index]])
             else:
                 print('Bottom of Options Menu')
@@ -172,7 +169,6 @@ def filter_app(pathpath_in,window):
         for i in range(len(list_images)):
             image_dict[i] = list_images[i]
         print(f'{len(list_images)} image(s) in this folder(list)')
-        print(f'{len(image_dict)} image(s) in this folder(dict)')
         material_dict = {
             'Plastic' : [],
             'Metal' : [],
@@ -406,7 +402,7 @@ def filter_app(pathpath_in,window):
                 print("No stats.json")
             
             stats_dict[object_class] = material_dict
-            print(stats_dict)
+ 
             # create and update stats dict
             with open(f'{prediction_folder}/relabel_Object Materials/stats.json', 'w') as f:
                 json.dump(stats_dict,f)
@@ -466,9 +462,6 @@ def filter_app(pathpath_in,window):
         elif event.char == "o":
             print("o pressed")    
             open_directory()
-        # elif event.char == "c":
-        #     print("c pressed")    
-        #     copy_files()
 
     def left(event):
         print("< pressed")    
@@ -512,12 +505,9 @@ def filter_app(pathpath_in,window):
     # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
     # Starts
-    # root = tk.Tk()
     root = tk.Toplevel(window)
     root.geometry('700x700')
-    root.title('Object Material Filter V2.3')
-
-    
+    root.title('Relabeled Object Material Filter')
 
     # KeyBinding Controls
     root.bind("<Key>", handle_keypress)
@@ -611,11 +601,6 @@ def filter_app(pathpath_in,window):
 
     # function buttons
 
-    # func1_text = tk.StringVar()
-    # func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_directory())
-    # func1_text.set('Open Folder (O)')
-    # func1_btn.grid(column=5, row=1)
-
     func2_text = tk.StringVar()
     func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_material_class())
     func2_text.set('Delete (del/bksp)')
@@ -631,42 +616,6 @@ def filter_app(pathpath_in,window):
     func4_text.set('Prev - (<)')
     func4_btn.grid(column=5, row=4)
 
-    # func5_text = tk.StringVar()
-    # func5_btn = tk.Button(root, textvariable=func5_text, command=lambda:copy_files(), height = 8)
-    # func5_text.set('Finished (C)')
-    # func5_btn.grid(column=5, row=5)
-
-    # func6_text = tk.StringVar()
-    # func6_btn = tk.Button(root, textvariable=func6_text, command=lambda:test('empty'))
-    # func6_text.set('func 6')
-    # func6_btn.grid(column=6, row=0)
-
-    # func7_text = tk.StringVar()
-    # func7_btn = tk.Button(root, textvariable=func7_text, command=lambda:test('empty'))
-    # func7_text.set('func 7')
-    # func7_btn.grid(column=6, row=1)
-
-    # func8_text = tk.StringVar()
-    # func8_btn = tk.Button(root, textvariable=func8_text, command=lambda:test('empty'))
-    # func8_text.set('func 8')
-    # func8_btn.grid(column=6, row=2)
-
-    # func9_text = tk.StringVar()
-    # func9_btn = tk.Button(root, textvariable=func9_text, command=lambda:test('empty'))
-    # func9_text.set('func 9')
-    # func9_btn.grid(column=6, row=3)
-
-    # func10_text = tk.StringVar()
-    # func10_btn = tk.Button(root, textvariable=func10_text, command=lambda:test('empty'))
-    # func10_text.set('func 10')
-    # func10_btn.grid(column=6, row=4)
-
-    # func11_text = tk.StringVar()
-    # func11_btn = tk.Button(root, textvariable=func11_text, command=lambda:test('empty'))
-    # func11_text.set('func 11')
-    # func11_btn.grid(column=6, row=5)
-
-    
     open_directory()
     # finish
     root.mainloop()

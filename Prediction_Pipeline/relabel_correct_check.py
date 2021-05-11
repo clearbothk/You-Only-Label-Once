@@ -27,9 +27,6 @@ def correct_check(images, labels, window):
         global image640_path
         global labels_path
         
-        # project is base folder
-        # name is prediction folder
-        
         image640_path = images
         labels_path = labels
         
@@ -71,13 +68,8 @@ def correct_check(images, labels, window):
         image_ori.image = image_
         image_ori.grid(column=5, columnspan=5, row=1, rowspan=3)
 
-
-
-        # finish writing this later need to path to predictions_time/labels folder to pull labels
         # for bounded image
         try:
-
-
             bou_img = img_bound(image640_path, labels_path,  image_dict[current_image].split('.')[0])
             bou_img = Image.fromarray(bou_img)
             b, g, r = bou_img.split()
@@ -91,7 +83,6 @@ def correct_check(images, labels, window):
         except:
             if AttributeError or UnboundLocalError:
                 image_bou = tk.Label(root, text='No Bounded Image')
-                # image_bou.image = image_
                 image_bou.grid(column=0, columnspan=5, row=1, rowspan=3)
 
 
@@ -129,7 +120,6 @@ def correct_check(images, labels, window):
             image_ori.destroy()
             image_bou.destroy()
             load_image()
-            
         save_dict()
 
     def delete_label_class():
@@ -234,7 +224,29 @@ def correct_check(images, labels, window):
         Pred = os.getcwd()
         os.chdir('..')
         Project = os.getcwd()
+        
+        # remove folders
+        try:
+            if 'relabel_Correct' and 'relabel_Incorrect' and 'relabel_Remove' in os.listdir(f'{Pred}'):
+                shutil.rmtree(f'{Pred}/relabel_Correct/')
+                shutil.rmtree(f'{Pred}/relabel_Incorrect/')
+                shutil.rmtree(f'{Pred}/relabel_Remove/')
+                print('relabeled folders deleted')
+        except:
+            print('relabeled folders not found')
 
+        # create folders
+        os.makedirs(f'{Pred}/relabel_Correct/',exist_ok=True)
+        os.makedirs(f'{Pred}/relabel_Correct/images',exist_ok=True)
+        os.makedirs(f'{Pred}/relabel_Correct/labels',exist_ok=True)
+        os.makedirs(f'{Pred}/relabel_Incorrect/',exist_ok=True)
+        os.makedirs(f'{Pred}/relabel_Incorrect/images',exist_ok=True)
+        os.makedirs(f'{Pred}/relabel_Incorrect/labels',exist_ok=True)
+        os.makedirs(f'{Pred}/relabel_Remove/',exist_ok=True)
+        os.makedirs(f'{Pred}/relabel_Remove/images',exist_ok=True)
+        os.makedirs(f'{Pred}/relabel_Remove/labels',exist_ok=True)
+        print('relabeled folders created')
+        
         for file in correct_dict["Correct"]:
             try:
                 file_name = file.split("/")[-1]
@@ -300,9 +312,8 @@ def correct_check(images, labels, window):
 
     # start
     root = tk.Toplevel(window)
-    root.title("YOLO Image Reviewer")
+    root.title("Relabeled Image Reviewer")
 
-    
     # KeyBinding Controls
 
     root.bind("<Key>", handle_keypress)
@@ -321,11 +332,6 @@ def correct_check(images, labels, window):
     func0_btn = tk.Button(root, textvariable=func0_text, command=lambda:copy_files())
     func0_text.set('Copy Files and Quit')
     func0_btn.grid(column=10, row=5)
-
-    # func1_text = tk.StringVar()
-    # func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_file())
-    # func1_text.set('Open Folder (O)')
-    # func1_btn.grid(column=5, row=1)
 
     func2_text = tk.StringVar()
     func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_label_class())
