@@ -34,7 +34,7 @@
 # Process
 
 ## System Architecture
-* Insert JPG Here
+![alt text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/system_architecture.png "Title")
 
 
 ## Data Collection
@@ -51,12 +51,16 @@
 * 5,210 Unique Images
 * 9,675 Labels
 
+![alt text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Distribution%20of%20Training%20Data%20Labels.jpg "Distribution")
+
 ## YOLOv5 Modelling
 * Experimented with various YOLOv5 models (s/m/l/xl).
 * The final model was trained on M after considering accuracy, recall, and training/predicting time.
 * The model produced promising results in identifying objects, however object material could not be differentiated. 
     * Our solution was to create a GUI to assign material classes quickly and accurately by human eye instead of having a model mislabel material classes.
+![alt text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Model.jpg "YOLOv5 Model")
 
+![alt text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Results.jpg "YOLO Results")
 ## CNN Modelling (Experimented, not implemented)
 * Using the same images (cropped) used in the YOLO Model Training, we trained our CNN model to classify the material given an object category. Eg. This a bottle, is it a plastic or glass bottle.
 * Material prediction accuracy varied depending on the object category.
@@ -87,6 +91,20 @@ model.add(Dense(num_classes, activation = 'softmax', kernel_regularizer=regulari
 ## Production
 * Python scripts created to streamline pipeline process of converting Raw images to images and labels in folders ready for YOLO training.
 * Tkinter GUI developed to provide simple interface for quick object and material classifications
+* 
+![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/gui_architecture.png "GUI Architecture")
+
+![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Main%20GUI.jpg "GUI Main")
+
+![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Detection.png "Yolo Detection")
+
+![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Correct.jpg "GUI Correct")
+
+![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Materials.jpg "GUI Materials")
+
+![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/stats.jpg "GUI Stats")
+
+
 
 ## Main Challenges
 * Data - Difficult to find quality images of trash in sufficient volume. Limitations on variety of images found via search engines. 
