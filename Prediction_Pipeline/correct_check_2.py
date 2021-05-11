@@ -83,8 +83,11 @@ def correct_check(project, name, window):
         # finish writing this later need to path to predictions_time/labels folder to pull labels
         # for bounded image
         try:
+<<<<<<< Updated upstream:Prediction_Pipeline/correct_check_2.py
 
 
+=======
+>>>>>>> Stashed changes:Prediction_Pipeline/main_function/main_correct_check.py
             bou_img = img_bound(folder_path, labels_path,  image_dict[current_image].split('.')[0])
             bou_img = Image.fromarray(bou_img)
             b, g, r = bou_img.split()
