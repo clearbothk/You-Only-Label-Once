@@ -48,7 +48,7 @@ def img_bound(path_image, path_label, filename):
             b = dh - 1
         
         cv2.rectangle(img, (l, t), (r, b), color_dict[str(int(object_class))], 2)
-        cv2.rectangle(img, (l, t), (r,t-20), color_dict[str(int(object_class))], -1)
-        cv2.putText(img, object_dict[str(int(object_class))], (l+5, t-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
+        cv2.rectangle(img, (l, t), (r,t+20), color_dict[str(int(object_class))], -1)
+        cv2.putText(img, object_dict[str(int(object_class))], (l+5, t+15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
     
     return img
