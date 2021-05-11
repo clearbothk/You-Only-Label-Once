@@ -3,14 +3,13 @@
 
 * Clearbot is a swarm of trash collecting robots that use AI-Vision to detect and collect trash from water bodies. These robots are fully autonomous, solar-powered and work as a team to remove trash. In comparison to any current solution, Clearbot is 15x cheaper, has 5x more reach and removes 2x more trash daily (24x7x365).
 
-
-# Capstone Project - 
-* To help Clearbot improve labelling speed
-
-
 ## Project Aim
-* Collaborate with Clearbot to produce a lightweight and efficient auto labelling tool for increased labelling speed. 
-* Create an effective model (~80% accuracy) for identifying types of trash on the Clearbot machine.
+* Create a model that can label images of trash at ~80% precision & recall to improve on manual label speed.
+* Collect and output statistical information about distribution of input images.
+
+## Business Value
+* Our solution will allow Clearbot to significantly reduce annotation time.
+* Countless man hours saved via the tool will mean long term cost savings and allow more efficient deployment of manpower.
 
 ## Project Overview
 * Over 4500 photos scraped and labelled to train YOLOv5
@@ -34,8 +33,16 @@
 
 # Process
 
+## System Architecture
+* Insert JPG Here
+
+
 ## Data Collection
-* Due to limited testing data, our team scraped Google images
+* Due to limited testing data, our team scraped images from the following sources:
+    * Google Images
+    * [TACO Dataset](http://tacodataset.org/ "Taco Dataset")
+    * [Kaggle Dataset](https://www.kaggle.com/asdasdasasdas/garbage-classification "Kaggle Dataset") - Plastic 
+    * [Trashnet Dataset](https://github.com/garythung/trashnet "Thung & Yang") - Thung & Yang
 * LabelImg was used to annotate images with bounding boxes
 
 ## YOLOv5 Modelling
