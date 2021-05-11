@@ -11,13 +11,14 @@ from datetime import date, datetime
 
 # import over .py file to call the functions-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
-from yolo_check import clone_yolo
-from convert_images import convert, rename
-from correct_check_2 import correct_check
-from crop_images import crop_images
-from filter_app_main_gui import filter_app
-from read_stats import read_stats
-from step5_combine_stats import combine_stats
+from main_yolo_check import clone_yolo
+from main_convert_images import convert, rename
+from main_crop_images import crop_images
+from main_correct_check import correct_check
+from main_filter_app import filter_app
+from main_read_stats import read_stats
+from main_combine_stats import combine_stats
+from main_load_source import load
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
@@ -28,7 +29,6 @@ time = datetime.now().strftime("%H_%M")
 
 
 def step1():
-    from load_source import load
     global SOURCE, PROJECT, YOLO, NAME
     SOURCE, PROJECT, YOLO = load(main)
     print(SOURCE, PROJECT, YOLO)

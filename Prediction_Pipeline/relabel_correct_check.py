@@ -1,13 +1,10 @@
-from tkinter import filedialog
 from tkinter import *
 from PIL import ImageTk,Image 
 import tkinter as tk
 import os
-import glob
-from time import localtime, strftime
 import json
 import shutil
-from image_bound import img_bound
+from relabel_image_bound import img_bound
 
 def correct_check(images, labels, window):
     global correct_dict
@@ -58,10 +55,14 @@ def correct_check(images, labels, window):
         global image_path
         global image_ori, image_bou
 
+        #Grab Screen Height and Width
+        screen_width = root.winfo_screenwidth() * 0.4
+        screen_height = root.winfo_screenheight() * 0.4
+        MAX_SIZE = (screen_width, screen_height)
+
         # for original image
         image_path = f'{image640_path}/{image_dict[current_image]}'
         image = Image.open(image_path)
-        MAX_SIZE = (640, 640)
         image.thumbnail(MAX_SIZE)
         image_ = ImageTk.PhotoImage(image)
         image_ori = tk.Label(root, image=image_)
@@ -74,7 +75,6 @@ def correct_check(images, labels, window):
             bou_img = Image.fromarray(bou_img)
             b, g, r = bou_img.split()
             bou_img = Image.merge('RGB', (r,g,b))
-            MAX_SIZE = (640, 640)
             bou_img.thumbnail(MAX_SIZE)
             bou_img_ = ImageTk.PhotoImage(bou_img)
             image_bou = tk.Label(root, image=bou_img_)

@@ -1,17 +1,12 @@
-from tkinter import filedialog
 from tkinter import *
 from PIL import ImageTk,Image 
 import tkinter as tk
 import os
-import glob
-from time import localtime, strftime
 import json
 import shutil
+from main_image_bound import img_bound
 
 def correct_check(project, name, window):
-    
-    from image_bound import img_bound
-
     global correct_dict, Project, Name
 
     Project = project
@@ -32,9 +27,6 @@ def correct_check(project, name, window):
         global current_image
         global image640
         global labels_path
-        
-        # project is base folder
-        # name is prediction folder
         
         image640_path = f'{Project}/images'
         labels_path = f'{Project}{Name}/labels'
@@ -82,13 +74,8 @@ def correct_check(project, name, window):
         image_ori.image = image_
         image_ori.grid(column=5, columnspan=6, row=1, rowspan=3)
 
-
-
-        # finish writing this later need to path to predictions_time/labels folder to pull labels
         # for bounded image
         try:
-
-
             bou_img = img_bound(folder_path, labels_path,  image_dict[current_image].split('.')[0])
             bou_img = Image.fromarray(bou_img)
             b, g, r = bou_img.split()
@@ -102,8 +89,6 @@ def correct_check(project, name, window):
             if AttributeError or UnboundLocalError:
                 image_bou = tk.Label(root, text = "No Bounded Objects Found in this Image")
                 image_bou.grid(column=0, columnspan=5, row=1, rowspan=3)
-
-            
 
         number['text'] = f'{int(current_image+1)} / {len(list_images)} '
 
@@ -137,7 +122,6 @@ def correct_check(project, name, window):
             image_ori.destroy()
             image_bou.destroy()
             load_image()
-            
         save_dict()
 
     def delete_label_class():
@@ -162,7 +146,6 @@ def correct_check(project, name, window):
             current_image -= 1
             image_bou.destroy()
             image_ori.destroy()
-
             load_image()
         save_dict()
 
@@ -235,12 +218,19 @@ def correct_check(project, name, window):
 
     def copy_files():
         global folder_path
-        # print(folder_path)
-
         os.chdir(Project + Name)
-        # os.chdir("..")
-        print(os.getcwd())
 
+        # remove folders
+        try:
+            if 'Correct' and 'Incorrect' and 'Remove' in os.listdir(os.getcwd()):
+                shutil.rmtree('./Correct/')
+                shutil.rmtree('./Incorrect/')
+                shutil.rmtree('./Remove/')
+                print('labeled folders deleted')
+        except:
+            print('labeled folders not found')
+
+        # create folders
         os.makedirs("./Correct/",exist_ok=True)
         os.makedirs("./Correct/images",exist_ok=True)
         os.makedirs("./Correct/labels",exist_ok=True)
@@ -250,6 +240,7 @@ def correct_check(project, name, window):
         os.makedirs("./Remove/",exist_ok=True)
         os.makedirs("./Remove/images",exist_ok=True)
         os.makedirs("./Remove/labels",exist_ok=True)
+        print('labeled folders created')
 
         for file in correct_dict["Correct"]:
             try:
@@ -335,32 +326,20 @@ def correct_check(project, name, window):
     func0_text.set('Copy Files and Quit')
     func0_btn.grid(column=4, row=7)
 
-
-
-    # func1_text = tk.StringVar()
-    # func1_btn = tk.Button(root, textvariable=func1_text, command=lambda:open_file())
-    # func1_text.set('Open Folder (O)')
-    # func1_btn.grid(column=5, row=1)
-
     func2_text = tk.StringVar()
     func2_btn = tk.Button(root, textvariable=func2_text, command=lambda:delete_label_class())
     func2_text.set('Delete (del)')
-
     func2_btn.grid(column=4, row=4)
-
 
     func3_text = tk.StringVar()
     func3_btn = tk.Button(root, textvariable=func3_text, command=lambda:next_image())
     func3_text.set('Next + (>)')
     func3_btn.grid(column=4, row=5)
 
-
     func4_text = tk.StringVar()
     func4_btn = tk.Button(root, textvariable=func4_text, command=lambda:prev_image())
     func4_text.set('Prev - (<)')
     func4_btn.grid(column=4, row=6)
-
-
 
     number = tk.Label(root, text='')
     number.grid(columnspan=1, column=3, row=4)
