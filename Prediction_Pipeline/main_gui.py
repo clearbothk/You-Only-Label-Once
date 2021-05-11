@@ -1,37 +1,35 @@
-from tkinter import filedialog
 from tkinter import *
 from PIL import ImageTk, Image
 import tkinter as tk
 import os
 import glob
-from time import localtime, strftime
 import json
 import shutil
 from datetime import date, datetime
 
 # import over .py file to call the functions-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
-from yolo_check import clone_yolo
-from convert_images import convert, rename
-from correct_check_2 import correct_check
-from crop_images import crop_images
-from filter_app_main_gui import filter_app
-from read_stats import read_stats
+from main_function.main_yolo_check import clone_yolo
+from main_function.main_convert_images import convert, rename
+from main_function.main_crop_images import crop_images
+from main_function.main_correct_check import correct_check
+from main_function.main_filter_app import filter_app
+from main_function.main_read_stats import read_stats
+from main_function.main_combine_stats import combine_stats
+from main_function.main_load_source import load
 
 # Variables -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 original_path = os.getcwd()
 date = str(date.today())
 time = datetime.now().strftime("%H_%M")
-print('here 1')
+
 # Functions -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 
 def step1():
-    from load_source import load
     global SOURCE, PROJECT, YOLO, NAME
     SOURCE, PROJECT, YOLO = load(main)
-    print(SOURCE, PROJECT, YOLO)
 
     """CHECK YOLO"""
     YOLO = clone_yolo(YOLO)
@@ -39,7 +37,6 @@ def step1():
     PROJECT = PROJECT + '/' + date + '/'
     NAME = 'predictions_' + time
     
-    print('check yolo done')
     try:
         os.mkdir(PROJECT)
     except:
@@ -85,24 +82,6 @@ def step1():
     func1_text.set('Done')
     func1_btn['state'] = 'disable'
 
-    # Create a popup to tell user that Step 2 ready
-
-    # mini_close = tk.Toplevel()
-    # mini_close.geometry('150x100')
-    
-
-    # step1_name = tk.StringVar()
-    # step1_name.set('Step 1 Complete!')
-    # s1 = tk.Label(master=mini_close,textvariable=step1_name, font=('Calibri', 15))
-    # s1.grid(column=0, row=0)
-
-    # step1_close = tk.StringVar()
-    # step1_btn = tk.Button(mini_close, textvariable=step1_close, command=mini_close.destroy, height=2, width=10)
-    # step1_close.set('Close Window')
-    # step1_btn.grid(column=0, row=1)
-
-    # mini_close.mainloop()
-
 def step2():
     """TKINTER"""
     correct_check(PROJECT, NAME, main)
@@ -118,8 +97,6 @@ def step2():
     path = os.getcwd()
 
     labels_path = glob.glob(path + '/labels/*.txt')
-    image_path = glob.glob(path + '/images/*.jpg')
-    #files = [i.split('/')[-1][:-4] for i in labels_path]
     files = [i[-25:-4] for i in labels_path]
 
     for cat in item_class_dict.values():
@@ -135,29 +112,18 @@ def step3():
 def step4():
     read_stats(PROJECT + NAME,date,time)
 
+def step5():
+    combine_stats(date)
+
 # GUI application starts here -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 main = tk.Tk()
-print('here 2')
 main.geometry('700x800')
 main.title('Main GUI')
 
 ico = Image.open('clearbot.png')
 photo = ImageTk.PhotoImage(ico)
 main.wm_iconphoto(False, photo)
-
-
-# KeyBinding Controls
-# root.bind("<Key>", handle_keypress)
-# root.bind("<Left>", left)
-# root.bind('<Right>', right)
-# root.bind('<Escape>', quitquit)
-# root.bind('<BackSpace>', deldel)
-# root.bind('<Shift-BackSpace>', deldelclean)
-# root.bind('<Delete>', deldel)
-# root.bind('<Shift-Delete>', deldelclean)
-# root.bind('<Up>', up)
-# root.bind('<Down>', down)
 
 # Setting Canvas
 canvas_main = tk.Canvas(main, width=700, height=750)
@@ -218,7 +184,8 @@ Display statistics for current batch of images''',
 func4_title.grid(column=0, row=4)
 
 func5_title = tk.Label(main, 
-                        text='''Step 5.
+                        text=f'''Step 5.
+Show {date} Stats
 ''', 
                         justify='left',
                         anchor=W,
@@ -226,9 +193,6 @@ func5_title = tk.Label(main,
                         height=6,
                         font=('Calibri', 12))
 func5_title.grid(column=0, row=5)
-
-# func6_title = tk.Label(root, text='None')
-# func6_title.grid(column=0, row=6) 
 
 # Function buttons
 
@@ -253,39 +217,9 @@ func4_text.set('Step 4')
 func4_btn.grid(column=1, row=4)
 
 func5_text = tk.StringVar()
-func5_btn = tk.Button(main, textvariable=func5_text, height=4, width=30, borderwidth=5)
+func5_btn = tk.Button(main, textvariable=func5_text, command=step5, height=4, width=30, borderwidth=5)
 func5_text.set('Step 5')
 func5_btn.grid(column=1, row=5)
-
-# func6_text = tk.StringVar()
-# func6_btn = tk.Button(root, textvariable=func6_text, command=lambda:test('empty'))
-# func6_text.set('func 6')
-# func6_btn.grid(column=6, row=0)
-
-# func7_text = tk.StringVar()
-# func7_btn = tk.Button(root, textvariable=func7_text, command=lambda:test('empty'))
-# func7_text.set('func 7')
-# func7_btn.grid(column=6, row=1)
-
-# func8_text = tk.StringVar()
-# func8_btn = tk.Button(root, textvariable=func8_text, command=lambda:test('empty'))
-# func8_text.set('func 8')
-# func8_btn.grid(column=6, row=2)
-
-# func9_text = tk.StringVar()
-# func9_btn = tk.Button(root, textvariable=func9_text, command=lambda:test('empty'))
-# func9_text.set('func 9')
-# func9_btn.grid(column=6, row=3)
-
-# func10_text = tk.StringVar()
-# func10_btn = tk.Button(root, textvariable=func10_text, command=lambda:test('empty'))
-# func10_text.set('func 10')
-# func10_btn.grid(column=6, row=4)
-
-# func11_text = tk.StringVar()
-# func11_btn = tk.Button(root, textvariable=func11_text, command=lambda:test('empty'))
-# func11_text.set('func 11')
-# func11_btn.grid(column=6, row=5)
 
 # finish
 main.mainloop()
