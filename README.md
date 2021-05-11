@@ -79,28 +79,32 @@ model.add(Dense(num_classes, activation = 'softmax', kernel_regularizer=regulari
 
 ## File Structure
 ```
-📦Root
- ┣ 📂labeled_images
- ┃ ┣ 📂images
- ┃ ┗ 📂labels
- ┣ 📂purgepy
- ┃ ┗ 📜purge_all_but_raw_data.py
- ┣ 📂raw_images
- ┃ ┗ 📜IMG_20210405_130122.jpg
- ┣ 📂unlabeled_images
- ┣ 📂yolo_training_data
- ┃ ┣ 📂test
- ┃ ┃ ┣ 📂images
- ┃ ┃ ┗ 📂labels
- ┃ ┣ 📂train
- ┃ ┃ ┣ 📂images
- ┃ ┃ ┗ 📂labels
- ┃ ┗ 📂val
- ┃ ┃ ┣ 📂images
- ┃ ┃ ┗ 📂labels
- ┣ 📜1-Convert_images.py
- ┣ 📜2-Transfer_unlabled_to_labeled.py
- ┣ 📜3-Prepare_for_yolo.py
- ┗ 📜4-Crop_by_bounding_box.py
+📦Prediction_Pipeline
+ ┣ 📂main_function
+ ┃ ┣ 📜main_combine_stats.py
+ ┃ ┣ 📜main_convert_images.py
+ ┃ ┣ 📜main_correct_check.py
+ ┃ ┣ 📜main_crop_images.py
+ ┃ ┣ 📜main_filter_app.py
+ ┃ ┣ 📜main_image_bound.py
+ ┃ ┣ 📜main_load_source.py
+ ┃ ┣ 📜main_read_stats.py
+ ┃ ┣ 📜main_yolo_check.py
+ ┃ ┗ 📜__init__.py
+ ┣ 📂relabel_functions
+ ┃ ┣ 📜relabel_combine_stats.py
+ ┃ ┣ 📜relabel_correct_check.py
+ ┃ ┣ 📜relabel_crop_images.py
+ ┃ ┣ 📜relabel_filter_app.py
+ ┃ ┣ 📜relabel_image_bound.py
+ ┃ ┣ 📜relabel_read_stats.py
+ ┃ ┗ 📜__init__.py
+ ┣ 📜best.pt
+ ┣ 📜clearbot.png
+ ┣ 📜item_classes.json
+ ┣ 📜main_gui.py
+ ┣ 📜predefined_classes.txt
+ ┣ 📜relabel_gui.py
+ ┗ 📜requirements.txt
 ```
 
