@@ -4,7 +4,7 @@ import tkinter as tk
 import os
 import json
 import shutil
-from main_function.main_image_bound import img_bound
+from main_functions.main_image_bound import img_bound
 
 def correct_check(project, name, window):
     global correct_dict, Project, Name
