@@ -34,8 +34,7 @@
 # Process
 
 ## System Architecture
-![alt text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/system_architecture.png "Title")
-
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/system_architecture.png" width=60% height=60%>
 
 ## Data Collection
 * Due to limited testing data, our team scraped images from the following sources:
@@ -51,16 +50,17 @@
 * 5,210 Unique Images
 * 9,675 Labels
 
-![alt text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Distribution%20of%20Training%20Data%20Labels.jpg "Distribution")
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Distribution%20of%20Training%20Data%20Labels.jpg" width=60% height=60%>
 
 ## YOLOv5 Modelling
 * Experimented with various YOLOv5 models (s/m/l/xl).
 * The final model was trained on M after considering accuracy, recall, and training/predicting time.
 * The model produced promising results in identifying objects, however object material could not be differentiated. 
     * Our solution was to create a GUI to assign material classes quickly and accurately by human eye instead of having a model mislabel material classes.
-![alt text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Model.jpg "YOLOv5 Model")
 
-![alt text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Results.jpg "YOLO Results")
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Model.jpg" width=60% height=60%>
+
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Results.jpg" width=60% height=60%>
 ## CNN Modelling (Experimented, not implemented)
 * Using the same images (cropped) used in the YOLO Model Training, we trained our CNN model to classify the material given an object category. Eg. This a bottle, is it a plastic or glass bottle.
 * Material prediction accuracy varied depending on the object category.
@@ -91,19 +91,19 @@ model.add(Dense(num_classes, activation = 'softmax', kernel_regularizer=regulari
 ## Production
 * Python scripts created to streamline pipeline process of converting Raw images to images and labels in folders ready for YOLO training.
 * Tkinter GUI developed to provide simple interface for quick object and material classifications
-* 
-![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/gui_architecture.png "GUI Architecture")
 
-![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Main%20GUI.jpg "GUI Main")
 
-![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Detection.png "Yolo Detection")
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/gui_architecture.png" width=60% height=60%>
 
-![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Correct.jpg "GUI Correct")
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Main%20GUI.jpg" width=60% height=60%>
 
-![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Materials.jpg "GUI Materials")
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/YOLO%20Detection.png" width=60% height=60%>
 
-![Alt Text](https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/stats.jpg "GUI Stats")
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Correct.jpg" width=60% height=60%>
 
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/Materials.jpg" width=60% height=60%>
+
+<img src="https://github.com/ahhhlexli/clearbot/blob/main/Github%20Images/stats.jpg" width=60% height=60%>
 
 
 ## Main Challenges
