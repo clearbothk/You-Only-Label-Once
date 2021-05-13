@@ -4,6 +4,13 @@ from PIL import Image, ImageOps
 
 
 def convert(source, date):
+    """Converts all input images to a max size of 640x640 pixels and copies into a
+    folder called 'images'.
+
+    Args:
+        source (str): Source of the images
+        date (str): Destination folder
+    """
     print("----------")
     print("Converting all images to JPG format for processing")
     print("----------")
@@ -23,6 +30,12 @@ def convert(source, date):
             pass
 
 def rename(source, date):
+    """Renames all input images and copies into a folder called 'fullsize_images'.
+
+    Args:
+        source ([str]): Source of the images
+        date ([str]): Destination folder
+    """
     print("----------")
     print("Renaming all source images for processing")
     print("----------")
