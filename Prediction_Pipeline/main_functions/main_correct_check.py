@@ -7,8 +7,14 @@ import shutil
 from main_functions.main_image_bound import img_bound
 
 def correct_check(project, name, window):
-    global correct_dict, Project, Name
+    """After YOLO predictions are made, this function opens a GUI to sort the images into correct, incorrect and remove folders.
 
+    Args:
+        project (string): PROJECT + '/' + date + '/' (taken from main_gui.py)
+        name (string): 'predictions_' + time (taken from main_gui.py)
+        window (string): connects to main_gui.py main=tk.Tk(), tk.Toplevel(window)
+    """
+    global correct_dict, Project, Name
     Project = project
     Name = name
 
@@ -20,6 +26,9 @@ def correct_check(project, name, window):
     }
 
     def open_file():
+        """
+        Takes 2 paths and assigns them to global variables for load_images(). Converted images640 size and their respective labels. Loads correct_dict if found in the folder.
+        """
         #using global to create a global variable
         global list_images
         global image_dict
@@ -41,7 +50,7 @@ def correct_check(project, name, window):
             image_dict[i] = list_images[i]
         print(f'{len(list_images)} images in this folder')
         
-        # load material_dict if in folder (continue to work if work has already been done)
+        # load correct_dict if in folder (continue to work if work has already been done)
         if 'correct_dict.json' in os.listdir(image640_path):
             load_dict()
             print('Correct list dictionary found.')
@@ -54,7 +63,8 @@ def correct_check(project, name, window):
         count_class()
 
     def load_image():
-        # load image included in open_file function`
+        """load images included in open_file()
+        """
         global image
         global current_image 
         global image_path
@@ -215,6 +225,8 @@ def correct_check(project, name, window):
         print('correct_dict has been returned to clean slate')
 
     def copy_files():
+        """Using the correct_dict, this function moves the images to their respective folders
+        """
         global folder_path
         os.chdir(Project + Name)
 
