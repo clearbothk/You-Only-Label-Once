@@ -6,6 +6,15 @@ import json
 import shutil
 
 def filter_app(pathpath_in,window):
+    """
+    Overarching function to be called in step 3 the main_gui.py 
+
+    Launches the filter_app() that allows the user to filter cropped images of objects based on materials
+
+    Args:
+        pathpath_in ([string]): [path of directory containing cropped object images]
+        window ([variable]): [reference variable to the Tkinter window of the main_gui.py]
+    """
     global material_dict 
     global stats_dict
     global list_dir
@@ -45,6 +54,9 @@ def filter_app(pathpath_in,window):
 
     # Read all folders in the selected Directory
     def open_directory():
+        """
+        takes the input path (pathpath_in) specificed in filter_app() function to open the directory where the cropped photos of the object are stored.
+        """
         try:
             global root_dir
             global list_dir
@@ -84,6 +96,12 @@ def filter_app(pathpath_in,window):
             print('Directory Not Selected (Open Folder)')
 
     def change_folder(event):
+        """
+        Allows the user to change between different object categories when clicking on the variables in the options menu
+
+        Args:
+            event ([event]): [clicking of the variable in the options menu will trigger the activation of the function]
+        """
         global object_menu
         global list_dir
         global dir_dict
@@ -95,6 +113,9 @@ def filter_app(pathpath_in,window):
         copy_files()
 
     def up_menu():
+        """
+        Allows the user to move up the options menu to object categories when pressing the up arrow key on keyboard
+        """
         try:
             global dir_index
             if dir_index >= 1:
@@ -108,6 +129,9 @@ def filter_app(pathpath_in,window):
             pass
 
     def down_menu():
+        """
+        Allows the user to move down the options menu to object categories when pressing the down arrow key on keyboard
+        """
         try:
             global dir_index
             if dir_index < (len(list_dir))-1:
@@ -121,6 +145,12 @@ def filter_app(pathpath_in,window):
             pass
 
     def open_file_multi(dir_path):
+        """
+        Function that is used to open a selected directory where cropped object images are found
+
+        Args:
+            dir_path ([string]): [path to directory]
+        """
         #using global to create a global variable
         global list_images
         global image_dict
@@ -190,6 +220,9 @@ def filter_app(pathpath_in,window):
         copy_files()
 
     def load_image():
+        """
+        displays image according to currect_image variable specificed in open_file_multi() initializes at 0 to display first image can be changed 1 up or down in the next_image or prev_image
+        """
         # load image included in open_file function`
         global image
         global current_image 
@@ -220,6 +253,9 @@ def filter_app(pathpath_in,window):
         copy_files()
 
     def next_image():
+        """
+        display next image unless image is last image
+        """
         try:
             # going to next image
             global image
@@ -236,6 +272,9 @@ def filter_app(pathpath_in,window):
             pass
 
     def prev_image():
+        """
+        display previous image unless image is first image
+        """
         try:
             # going to previous image
             global image
@@ -251,6 +290,12 @@ def filter_app(pathpath_in,window):
             pass
 
     def select_material(material):
+        """
+        Allows to user to classify object as the selected material, console/terminal print statements notify the user of what the image has been classified as
+
+        Args:
+            material ([string]): [specify material to be selected]
+        """
         try:
             global material_dict
             # gate
@@ -285,6 +330,12 @@ def filter_app(pathpath_in,window):
             pass
 
     def skip_select_material(material):
+        """
+        Allows to user to classify all images of an object as the selected material
+
+        Args:
+            material ([string]): [specify material to be selected]
+        """
         global material_dict
         global image_dict
         global folder_path
@@ -302,6 +353,9 @@ def filter_app(pathpath_in,window):
             pass
 
     def delete_material_class():
+        """
+        Allows the user to delete the material classification of an object
+        """
         try:
             for i in material_dict:
                 if image_path in material_dict[i]:
@@ -319,8 +373,13 @@ def filter_app(pathpath_in,window):
         except NameError:
             pass
 
-    # Wipe Dict clean
     def wipe_dict(type_):
+        """
+        Resets material classifications for all images of a selected object
+
+        Args:
+            type_ ([int]): [1 : wipes material_dict for selected object, 2 : wipes material_dict in for skip_select_material]
+        """
         global material_dict
         # for shift-del/bksp
         if type_ == 1:
@@ -375,6 +434,9 @@ def filter_app(pathpath_in,window):
 
     # after classifying images create individual materials folder and files from dictionary to folder
     def copy_files():
+        """
+        Deletes any existing Object Materials folder before creating and copying in cropped images according the materials dictionary
+        """
         try:
             global stats_dict
             global material_dict
