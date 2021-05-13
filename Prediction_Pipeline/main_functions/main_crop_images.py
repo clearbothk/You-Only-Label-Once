@@ -1,6 +1,14 @@
 from PIL import Image 
 
 def crop_images(files, path, class_dict):
+    """Takes all filtered images from Step 1 that have been identified as correct in Step 2
+    and crops them according to the bounding box in preparation for material detection in Step 3.
+
+    Args:
+        files (list): List of files correctly predicted in Step 1
+        path (str): Current Directory
+        class_dict (dict): Dictionary of item classes from item_classes.json
+    """
 
     for file in files:
         counter = 1
