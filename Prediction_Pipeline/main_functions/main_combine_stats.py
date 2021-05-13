@@ -6,6 +6,12 @@ import numpy as np
 
 
 def combine_stats(date):
+    """Combine_stats goes through both Object Materials and Relabel_Object Materials folders to find all the csv files.
+    It is then combined into a pandas dataframe and plotted.
+
+    Args:
+        date (string): date is taken from the main_gui.py 
+    """
     csv_paths = []
     print(os.getcwd())
     for f in glob.glob("../predictions*/Object Materials/*.csv"):
